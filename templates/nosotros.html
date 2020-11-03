@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+        <main class="contenedor seccion">
+        <title>Andola - Nosotros</title>
+            <h1 class="fw-400 centrar-texto antibar">Conoce sobre nosotros</h1>
+            <div class="contenedor-internas contenido-nosotros">
+                <div class="imagen">
+                    <img src="{% static "/img/consul8.jpeg" %}" alt="Imagen Nosotros">
+                </div>
+                <div class="texto-nosotros">
+                    <blockquote>Tu salud en movimiento</blockquote>
+
+                    <p>Andola es un espacio de bienestar, un lugar donde convergen profesionales de la salud y la población que 
+                    necesita de sus servicios para ayudarle a recuperar su salud desde un enfoque centrado en la persona, esto 
+                    quiere decir que «la atención establece una colaboración entre profesionales, personas y sus familias para 
+                    garantizar que las decisiones respeten las necesidades y preferencias del paciente y que éstos tengan 
+                    la educación y el apoyo que necesiten para tomar decisiones y participar en su atención».
+                    </p>
+                    <p>Adoptamos la definición de la salud como un estado de equilibrio entre las esferas biológica, 
+                        física y mental en las que se desarrolla cada individuo sin presentar enfermedad; la perturbación, 
+                        alteración o pérdida de este equilibrio se traduce como enfermedad y creemos que todas las alteraciones 
+                        a la salud necesitan ser atendidas. Para ello contamos con la atención especializada de profesionales 
+                        de la salud que juntos cuentan con más de 30 años de experiencia brindando consultas 
+                        integrales con los mejores resultados, en las áreas de Acupuntura y Medicina Tradicional China,  
+                        Quiropráctica, Psicología y Rehabilitación Física, lo que nos permite aportar a la comunidad tratamientos 
+                        personalizados encaminados a mejorar su calidad de vida con una visión ética y humana.
+                    </p>
+                    <a href="/contacto" class="boton boton-azul">Contáctanos</a>
+
+                </div>
+            </div>
+
+            <div class="contenedor seccion">
+                <h3 class="fw-400 centrar-texto antibar"><a href="/servicios">Nuestros Servicios</a></h3>
+            <div class="iconos-nuestrosservicios column-drop-flex"> 
+    
+                <div class="icono bloque_acupuntura">
+                    <a href="{% url 'acupuntura' %}">
+                        <img src="{% static "img/acupuntura.svg" %}" alt="acupuntura" height="150px">
+                        <h2>Acupuntura</h2>
+                    </a>
+
+                    <p>Encargada de restablecer la dinámica de la sangre y la energía a través del estímulo con las agujas a los enerpuntos del cuerpo humano.</p>
+                    
+                </div>  
+
+                <div class="icono bloque_quiropractica">
+                    <a href="{% url 'quiropractica' %}">
+                        <img src="{% static "img/chiropractic.svg" %}" alt="quiropractica" height="150px">
+                        <h2>Quiropráctica</h2>
+                    </a>
+                    <p>Ajustes para la corrección de problemas posturales, aliviar el dolor y asistir la capacidad natural del cuerpo de sanarse a sí mismo.</p>
+                    
+                </div>
+
+                <div class="icono bloque_psicologia">
+                    <a href="{% url 'psicologia' %}">
+                        <img src="{% static "img/psicologia.svg" %}" alt="psicologia" height="150px">
+                        <h2>Psicología</h2>
+                    </a>
+                    <p>Acompañamiento terapéutico para promover la salud mental, el bienestar emocional y el proceso de autodescubrimiento. </p>
+                    
+                </div>
+
+                <div class="icono bloque_rehabilitacion">
+                    <a href="{% url 'rehabilitacion' %}">
+                        <img src="{% static "img/rehabilitation.svg" %}" alt="rehabilitacion" height="150px">
+                        <h2>Rehabilitación Física</h2>
+                    </a>
+                    <p>Tratamientos y técnicas aplicadas al paciente para recuperar la máxima funcionalidad posible tras de haber cursado por una lesión.</p>
+                    
+                </div>
+            </div>
+            <div class="contenedor agenda-cita mx-auto">
+                <a href="/contacto" class="boton boton-azul">Agenda una cita</a>
+            </div>
+            </div>
+        </main>
+{% endblock %}
+        

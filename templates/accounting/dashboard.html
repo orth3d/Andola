@@ -1,0 +1,253 @@
+{% extends 'gestion/base_admin.html' %}
+{% load static %}
+{% block content %}
+{% block head %}
+    <script src="{% static "lib/highcharts-8.2.0/highcharts.js" %}"></script>
+    <script src="{% static "lib/highcharts-8.2.0/modules/exporting.js" %}"></script>
+    <script src="{% static "lib/highcharts-8.2.0/modules/export-data.js" %}"></script>
+    <script src="{% static "lib/highcharts-8.2.0/modules/accessibility.js" %}"></script>
+{% endblock head %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+            <div id="container"></div>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-sm">
+                <div id="container-pieP"></div>
+            </div>
+            <div class="col-sm">
+                <div id="container-pieS"></div>
+            </div>
+        </div>
+        <br>
+    </div>
+    
+    <script type="application/javascript">
+        
+        
+        var graphcolumn = Highcharts.chart('container', {
+            title: {
+                text: 'Reporte Anual de Ventas'
+            },
+            subtitle: {
+                text: 'Andola SAS de CV'
+            },
+            xAxis: {
+                categories: [
+                    'Ene',
+                    'Feb',
+                    'Mar',
+                    'Abr',
+                    'May',
+                    'Jun',
+                    'Jul',
+                    'Ago',
+                    'Sep',
+                    'Oct',
+                    'Nov',
+                    'Dic'
+                ],
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Valores en $'
+                }
+            },
+            labels: {
+                items: [{
+                    html: 'Total Anual',
+                    style: {
+                        left: '50px',
+                        top: '18px',
+                        color: ( // theme
+                            Highcharts.defaultOptions.title.style &&
+                            Highcharts.defaultOptions.title.style.color
+                        ) || 'black'
+                    }
+                }]
+            },
+        });
+
+        // console.log(get_graph_sales_product_month);
+        var graphpieP = Highcharts.chart('container-pieP', {
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie'
+            },
+            title: {
+                text: '% Productos vendidos este mes'
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            accessibility: {
+                point: {
+                    valueSuffix: '%'
+                }
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                    }
+                }
+            },
+        });
+
+        var graphpieS = Highcharts.chart('container-pieS', {
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie'
+            },
+            title: {
+                text: '% Servicios vendidos este mes'
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            accessibility: {
+                point: {
+                    valueSuffix: '%'
+                }
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                    }
+                }
+            },
+        });
+
+        function get_graph_sales_year_month() {
+            $.ajax({
+                url: window.location.pathname,
+                type: 'POST',
+                data: {
+                    'action': 'get_graph_sales_year_month'
+                },
+                dataType: 'json',
+            }).done(function (data) {
+                if(!data.hasOwnProperty('error')) {
+                    graphcolumn.addSeries({
+                        type: 'column',
+                        name: 'Ingresos',
+                        data: {{ graph_sales_year_month.total|safe }}
+                    });
+                    graphcolumn.addSeries({
+                        type: 'column',
+                        name: 'Egresos',
+                        data: {{ graph_sales_year_month.gasto|safe }}
+                    });
+                    graphcolumn.addSeries({
+                        type: 'spline',
+                        name: 'Utilidad',
+                        data: {{ graph_sales_year_month.utilidad|safe }},
+                        marker: {
+                            lineWidth: 2,
+                            lineColor: Highcharts.getOptions().colors[2],
+                            fillColor: 'white'
+                        }
+                    });
+                    graphcolumn.addSeries({
+                        type: 'pie',
+                        name: '$',
+                        data: [{
+                            name: 'Ingresos',
+                            y: {{ graph_sales_year_month.totAnual|safe }},
+                            color: Highcharts.getOptions().colors[0],
+                            sliced: true,
+                        }, {
+                            name: 'Gastos',
+                            y: {{ graph_sales_year_month.gasAnual|safe }},
+                            color: Highcharts.getOptions().colors[1],
+                            sliced: true,
+                        }, {
+                            name: 'Utilidad',
+                            y: {{ graph_sales_year_month.utiAnual|safe }},
+                            color: Highcharts.getOptions().colors[2],
+                            sliced: true,
+                        }],
+                        center: [200, 80],
+                        size: 150,
+                        showInLegend: false,
+                        dataLabels: {
+                            enabled: false
+                        }
+                    });
+                    return false;
+                }
+                message_error(data.error);
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                alert(textStatus + ': ' + errorThrown);
+            }).always(function(data) {
+            
+            });
+        }
+
+        function get_graph_sales_product_month() {
+            $.ajax({
+                url: window.location.pathname,
+                type: 'POST',
+                data: {
+                    'action': 'get_graph_sales_product_month'
+                },
+                dataType: 'json',
+            }).done(function (data) {
+                if(!data.hasOwnProperty('error')) {
+                    // console.log(data);
+                    graphpieP.addSeries(data);
+                    return false;
+                }
+                message_error(data.error);
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                alert(textStatus + ': ' + errorThrown);
+            }).always(function(data) {
+            
+            });
+        }
+
+        function get_graph_sales_service_month() {
+            $.ajax({
+                url: window.location.pathname,
+                type: 'POST',
+                data: {
+                    'action': 'get_graph_sales_service_month'
+                },
+                dataType: 'json',
+            }).done(function (data) {
+                if(!data.hasOwnProperty('error')) {
+                    // console.log(data);
+                    graphpieS.addSeries(data);
+                    return false;
+                }
+                message_error(data.error);
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                alert(textStatus + ': ' + errorThrown);
+            }).always(function(data) {
+            
+            });
+        }
+
+        $(function (){
+            get_graph_sales_year_month();
+            get_graph_sales_product_month();
+            get_graph_sales_service_month();
+        })
+    </script>
+
+{% endblock content %}

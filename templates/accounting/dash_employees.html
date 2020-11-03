@@ -1,0 +1,136 @@
+{% extends 'gestion/base_admin.html' %}
+{% load static %}
+{% block content %}
+{% block head %}
+    <script src="{% static "lib/highcharts-8.2.0/highcharts.js" %}"></script>
+    <script src="{% static "lib/highcharts-8.2.0/modules/exporting.js" %}"></script>
+    <script src="{% static "lib/highcharts-8.2.0/modules/export-data.js" %}"></script>
+    <script src="{% static "lib/highcharts-8.2.0/modules/accessibility.js" %}"></script>
+{% endblock head %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm">
+                <div id="container-pieP"></div>
+            </div>
+            <div class="col-sm">
+                <div id="container-pieS"></div>
+            </div>
+        </div>
+        <br>
+    </div>
+    
+    <script type="application/javascript">
+        
+
+        // console.log(get_graph_sales_product_month);
+        var graphpieP = Highcharts.chart('container-pieP', {
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie'
+            },
+            title: {
+                text: '% Productos vendidos este mes'
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            accessibility: {
+                point: {
+                    valueSuffix: '%'
+                }
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                    }
+                }
+            },
+        });
+
+        var graphpieS = Highcharts.chart('container-pieS', {
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie'
+            },
+            title: {
+                text: '% Servicios vendidos este mes'
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            accessibility: {
+                point: {
+                    valueSuffix: '%'
+                }
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                    }
+                }
+            },
+        });
+
+        function get_graph_sales_product_month() {
+            $.ajax({
+                url: window.location.pathname,
+                type: 'POST',
+                data: {
+                    'action': 'get_graph_sales_product_month'
+                },
+                dataType: 'json',
+            }).done(function (data) {
+                if(!data.hasOwnProperty('error')) {
+                    // console.log(data);
+                    graphpieP.addSeries(data);
+                    return false;
+                }
+                message_error(data.error);
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                alert(textStatus + ': ' + errorThrown);
+            }).always(function(data) {
+            
+            });
+        }
+
+        function get_graph_sales_service_month() {
+            $.ajax({
+                url: window.location.pathname,
+                type: 'POST',
+                data: {
+                    'action': 'get_graph_sales_service_month'
+                },
+                dataType: 'json',
+            }).done(function (data) {
+                if(!data.hasOwnProperty('error')) {
+                    // console.log(data);
+                    graphpieS.addSeries(data);
+                    return false;
+                }
+                message_error(data.error);
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                alert(textStatus + ': ' + errorThrown);
+            }).always(function(data) {
+            
+            });
+        }
+
+        $(function (){
+            get_graph_sales_product_month();
+            get_graph_sales_service_month();
+        })
+    </script>
+
+{% endblock content %}

@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+        <main class="contenedor contenedor-internas">
+            <title>Andola - Servicios</title>
+            <h1 class="fw-400 centrar-texto">Nuestros Servicios</h1>
+            <div class="contenedor-servicios"> 
+            <div class="bloque-servicio">
+                <a href="acupuntura">
+                    <img src="{% static "img/acup-serv.svg" %}" alt="acupuntura" height="200px">
+                </a>
+                    <div class="servicio">
+                        <h2>Acupuntura</h2>
+                        <p>La Medicina Tradicional China es la ciencia médica que busca la recuperación de la homeostasis del individuo 
+                        a través de estimular las vías de reparación neuroendocrinas y osteotendinosas, entre otras. La Acupuntura es la 
+                        parte de la MTCh encargada de restablecer la dinámica de la sangre y la energía a través del estímulo con las 
+                        agujas a los enerpuntos del cuerpo humano.</p>
+                        <a href="acupuntura" class="boton boton-azul"> Más Información</a>
+                    </div>  
+                </div>
+                <div class="bloque-servicio">
+                    <a href="quiropractica">
+                        <img src="{% static "img/chiro-serv.svg" %}" alt="quiropractica" height="200px">
+                    </a>
+                    <div class="servicio">
+                        <h2>Quiropráctica</h2>
+                            <p>Especialistas en el sistema musculoesquelético, realizamos ajustes quiroprácticos para la corrección de problemas posturales, aliviar el dolor y asistir la capacidad natural del cuerpo de sanarse a sí mismo.</p>
+                            <a href="quiropractica" class="boton boton-azul"> Más Información</a>
+                    </div>
+                </div>
+                <div class="bloque-servicio">
+                    <a href="psicologia">
+                        <img src="{% static "img/psic-serv.svg" %}" alt="psicologia" height="200px">
+                    </a>
+                    <div class="servicio">
+                        <h2>Psicología</h2>
+                        <p>Acompañamiento terapéutico para promover la salud mental, el bienestar emocional y el proceso de autodescubrimiento. </p>
+                            <a href="psicologia" class="boton boton-azul"> Más Información</a>
+                    </div>
+                </div>
+                <div class="bloque-servicio">
+                    <a href="rehabilitacion">
+                        <img src="{% static "img/rehab-serv.svg" %}" alt="rehabilitacion" height="200px">
+                    </a>
+                    <div class="servicio">
+                        <h2>Rehabilitación Física</h2>
+                        <p>Ayudamos a las personas a recuperar las funciones corporales que perdieron debido a enfermedades o lesiones, a través de tratamientos y técnicas enfocadas en recuperar la máxima funcionalidad posible.</p>
+                            <a href="rehabilitacion" class="boton boton-azul"> Más Información</a>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+{% endblock %}

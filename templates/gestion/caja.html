@@ -1,0 +1,136 @@
+{% extends 'gestion/base_admin.html' %}
+{% load static %}
+
+
+{% block content %}
+<!-- Block head -->
+    {% block head %}
+        <link rel="stylesheet" href="{% static "css/caja.css" %}">
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+        <script src="{% static "js/caja.js" %}"></script>
+        <script src="{% static "lib/bootstrap-touchspin-4.3.0/jquery.bootstrap-touchspin.js" %}"></script>
+        <script src="{% static 'lib/moment-2.25.3/moment-with-locales.js' %}"></script>
+        <script src="{% static "lib/tempusdominus-bootstrap-4/tempusdominus-bootstrap-4.min.js" %}"></script>
+        <link rel="stylesheet" href="{% static "lib/tempusdominus-bootstrap-4/tempusdominus-bootstrap-4.min.css" %}">
+    {% endblock head %}
+    
+    <header class="header-internas">
+        
+    </header>
+
+    <div class="contenedor contenedor-caja">
+        <div class="datos-prodyserv" id="datos-prodyserv" >
+            <nav class="menu-pys">
+                <a href="#servicios"><i class="" aria-hidden="true"></i> Servicios</a>
+                <a href="#productos"><i class="" aria-hidden="true"></i> Productos</a>
+            </nav>
+            <div class="datos-servicios ocultar clearfix" id="servicios">
+                <ul class="servicios-andola">
+                {% for obj in servicios %}
+                    <li class="servicio-andola">
+                        <div class="imagen-servicio-caja">
+                            <img src="{{ obj.thumbnail.url }}" alt="{{ obj.nombre }}">
+                        </div>
+                        <div class="descripcion-servicio">
+                                <h3>{{ obj.nombre }}</h5>
+                            <p class="precio">$ {{ obj.precio }}</p>
+                            
+                            <label>Cantidad: </label>
+                            <input class="form-control input-sm" name="ttt" type="number" min="0" id="cant{{ obj.nombre }}" size="3" value="1">
+                            <script>
+                                $("#cant{{ obj.nombre }}").TouchSpin({
+                                    min: 1,
+                                    max: 10000,
+                                    step: 1,
+                                });
+                            </script>
+                            <button class="boton boton-azul btnAdd" id="{{ obj.id }}">Agregar</button>
+                        </div>
+                    </li>
+                {% endfor %}
+                </ul>
+            </div>
+            <div class="datos-productos ocultar clearfix" id="productos" name="action" value="productos">
+                <ul class="productos-andola">
+                {% for obj in productos %}
+                    <li class="producto-andola producto-herbolaria">
+                        <div class="imagen-producto-caja">
+                            <img src="{{ obj.thumbnail.url }}" alt="{{ obj.nombre }}">
+                        </div>
+                        <div class="descripcion-producto">
+                            <h3>{{ obj.nombre }}</h3>
+                            <p class="precio">$ {{ obj.precio }}</p>
+                            <label>Cantidad: </label>
+                            <input class="form-control input-sm" type="number" min="0" id="cant{{ obj.nombre }}" size="3" value="1">
+                            <script>
+                                $("#cant{{ obj.nombre }}").TouchSpin({
+                                    min: 1,
+                                    max: 10000,
+                                    step: 1,
+                                });
+                            </script>
+                            <button class="boton boton-azul btnAdd" id="{{ obj.id }}">Agregar</button>
+                        </div>
+                    </li>
+                {% endfor %}
+                </ul>
+            </div>
+            <script type="application/javascript" src="{% static "js/logic.js" %}"></script>
+        </div>
+        
+        <div class="datos-ticket">
+            <h2>Ticket</h2>
+            <div class="contenedor-ticket">
+            <form method="post">
+                <input type="hidden" name="action" value="{{ action }}">
+                <!--{% for field in form.visible_fields %} {% endfor %}-->
+                    <div class="form-group">
+                        <label>Fecha : </label>
+                        {{ form.date_joined }}
+                    </div>
+                    <div class="form-group">
+                        <label>Cliente : </label>
+                        {{ form.cli }}
+                    </div>
+
+                <table class="table table-bordered tbltckt" id="tblProducts">
+                    <thead>
+                        <tr>
+                            <th>Eliminar</th>
+                            <th>Producto</th>
+                            <th>PVP</th>
+                            <th>Cantidad</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody><!---->
+                    
+                </table>
+                    <button type="button" class="boton boton-peligro btn-xs btnRemoveAll"> 
+                        <i class="fas fa-trash"></i> Eliminar todos
+                    </button>
+                    
+                    <div class="form-group">
+                        <label>Total : </label>
+                        {{ form.total }}
+                    </div>
+                    <div class="form-group">
+                        <label>Comentarios : </label>
+                        {{ form.comment }}
+                    </div>
+                <button class="boton boton-azul" type="submit">Guardar</button>
+            </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        vents.items.products = {{ det|safe }};
+        vents.list();
+    </script>
+
+    
+
+{% endblock content %}

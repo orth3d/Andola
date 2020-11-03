@@ -1,0 +1,55 @@
+{% extends 'gestion/list.html' %}
+{% load static %}
+
+{% block columns %}
+<tr>
+  <th scope="col" style="width: 25%;">Título</th>
+  <th scope="col" style="width: 20%;">Imagen</th>
+  <th scope="col" style="width: 20%;">Fecha</th>
+  <th scope="col" style="width: 15%;">Autor</th>
+  <th scope="col" style="width: 25%;">Opciones</th>
+  <th></th>
+</tr>
+{% endblock columns %}
+
+{% block rows %}
+
+<script src="{% static 'js/postsList.js' %}"></script>  
+
+{% endblock rows %}
+
+{% block javascript %}
+
+<!-- Modal -->
+<div class="modal fade" id="myModalPost" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <form id="form" action="" method="POST" enctype="multipart/form-data">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Eliminar Post</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="container-fluid">
+            <input type="hidden" name="id" id="id" value="">
+            {% for field in form.visible_fields %}
+                <div class="form-group">
+                    <label for="">{{ field.label }}</label>
+                    {{ field }}
+                </div>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary"><i class="far fa-save"></i> Guardar</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+{% endblock javascript %}
+

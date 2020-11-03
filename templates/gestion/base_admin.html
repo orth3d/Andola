@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<!-- head -->
+{% include "gestion/head_admin.html" %}
+<!-- head -->
+<body class="sidebar-mini sidebar-collapse sidebar-closed">
+<!-- Site wrapper -->
+<div class="wrapper">
+  
+  <!-- header -->
+    {% include "gestion/header_admin.html" %}
+  <!-- header -->
+
+  <!-- Main Sidebar -->
+    {% include "gestion/side_admin.html" %}
+  <!-- Main Sidebar -->
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    {% block content %}
+    {% endblock content %}
+  </div>
+  <!-- /.content-wrapper -->
+
+  <!-- footer -->
+    {% include 'gestion/footer_admin.html' %} 
+  <!-- footer -->
+</div>
+<!-- ./wrapper -->
+
+<!-- scripts -->
+    {% include 'gestion/scripts_admin.html' %}   
+<!-- scripts -->
+  <script>
+    {% if messages %}
+      var html = '<p>';
+      {% for message in messages %}
+        html += '{{ message }}<br>';
+      {% endfor %}
+      html += '</p>';
+      Swal.fire({
+        title: '',
+        html: html,
+        icon: 'success',
+      });
+    {% endif %}
+  </script>
+</body>
+</html>

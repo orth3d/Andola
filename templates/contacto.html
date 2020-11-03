@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+        <title>Andola - Contacto</title>
+        <h1 class="fw-400 centrar-texto margen-servicios">Contacto</h1>
+        <section class="imagen-contacto parallax">
+        <p></p>
+        </section>
+        <main class="contenedor seccion clearfix">
+            <h2 class="fw-400 centrar-texto">Comunícate con nosotros</h2>
+            <div style="display: none;max-width:600px;" class="animated-modal" id="trueModal">
+              <h2>¡Gracias {{ name }}!</h2>
+              <p>Hemos recibido tu solicitud y nos pondremos en contacto contigo.</p>
+              <p><button data-fancybox-close class="btn">Cerrar</button></p>
+            </div>
+
+        {% if name %}
+
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    $("#trueModal").fancybox().trigger('click');
+                });
+            </script>
+
+            <div class="datos-contacto">
+                <div class="datitos centrar-texto">
+                    <h3 class="centrar-texto fw-400">Datos de Contacto</h3>
+                    <h3>Teléfonos:</h3>
+                    <ul>
+                        <li>57 702 344</li>
+                        <li>55 8553 1526</li>
+                    </ul>
+                    <h3>Correo electrónico:</h3>
+                    <ul>
+                        <li>contacto@andola.com</li>
+                    </ul>
+                    <ul class="social-menu centrar-texto fw-400">
+                        <li class="list-inline-item"><a href="https://www.facebook.com/AndolaSalud/"><i class="fab fa-facebook-square"></i></a></li>
+                        <li class="list-inline-item"><a href="https://api.whatsapp.com/send?phone=5215518289835&text=Hola%21%20Quisiera%20m%C3%A1s%20informaci%C3%B3n%20sobre%20Andola%20Salud%20Integral."><i class="fab fa-whatsapp-square"></i></i></a></li>
+                    </ul>
+                    <div class="loguito">
+                    <img src="{% static "/img/andola_hor.png" %}" alt="logo-andola">
+                    </div>
+                </div>
+            </div>
+
+            <div id="mapa" class="mapa">
+                <h3 class="centrar-texto fw-400">Encuéntranos</h3>
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3758.8970687762803!2d-99.03840068526185!3d19.58890998679573!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d1f1b7ca918ae7%3A0xad879f42f5d97f62!2sAndola%20Salud%20Integral!5e0!3m2!1ses-419!2smx!4v1590334623415!5m2!1ses-419!2smx" width="auto" height="450" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+            </div>
+
+        {% else %}
+        
+            
+            <div class="datos-contacto">
+                <div class="datitos centrar-texto">
+                    <h3 class="centrar-texto fw-400">Datos de Contacto</h3>
+                    <h3>Teléfonos:</h3>
+                    <ul>
+                        <li>57 702 344</li>
+                        <li>55 8553 1526</li>
+                    </ul>
+                    <h3>Correo electrónico:</h3>
+                    <ul>
+                        <li>contacto@andola.com</li>
+                    </ul>
+                    <ul class="social-menu centrar-texto container h1">
+                        <li class="list-inline-item"><a href="https://www.facebook.com/AndolaSalud/" target="blank"><i class="fab fa-facebook-square"></i></a></li>
+                        <li class="list-inline-item"><a href="https://api.whatsapp.com/send?phone=5215518289835&text=Hola%21%20Quisiera%20m%C3%A1s%20informaci%C3%B3n%20sobre%20Andola%20Salud%20Integral." target="blank"><i class="fab fa-whatsapp-square"></i></i></a></li>
+                    </ul>
+                    <div class="loguito">
+                    <img src="{% static "/img/andola_hor.png" %}" alt="logo-andola">
+                    </div>
+                </div>
+                
+                <h3 class="centrar-texto fw-400">Encuéntranos</h3>
+                <div id="mapa" class="mapa">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3758.8970687762803!2d-99.03840068526185!3d19.58890998679573!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d1f1b7ca918ae7%3A0xad879f42f5d97f62!2sAndola%20Salud%20Integral!5e0!3m2!1ses-419!2smx!4v1590334623415!5m2!1ses-419!2smx" width="auto" height="450" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+                </div>
+            </div>       
+            <div class="formulario-contacto">
+                <h3 class="centrar-texto fw-400">Rellena el formulario {{ name }}</h3>
+                <form action="" method="POST">
+                {% csrf_token %}
+                    <fieldset>
+                        <label for="nombre">Nombre:</label>
+                        <input type="text" name="nombre" placeholder="Tu Nombre">
+                        <label for="email">E-mail:</label>
+                        <input type="email" name="email" placeholder="Tu Correo Electrónico" required>
+                        <label for="telefono">Teléfono:</label>
+                        <input type="tel" name="telefono" placeholder="Tu telefono" required>
+                        <label for="mensaje">Mensaje:</label>
+                        <textarea name="mensaje"></textarea>
+                    </fieldset> 
+                    
+                    {% comment %} <a data-fancybox data-src="#trueModal" data-modal="true" href="javascript:;"><input type="submit" value="Enviar" class="boton boton-azul"></a> {% endcomment %}
+                    
+                    <input type="submit" value="Enviar" class="boton boton-azul">
+                </form>
+            </div>
+            
+        {% endif %}
+        </main>  
+        
+{% endblock %}

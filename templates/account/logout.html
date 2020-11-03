@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+{% load static %}
+
+{% load i18n %}
+{% load account socialaccount %}
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Andola | Log out</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{% static "css/style.css" %}">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{% static 'lib/adminlte/plugins/fontawesome-free/css/all.min.css' %}">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- icheck bootstrap -->
+  <link rel="stylesheet" href="{% static 'lib/adminlte/plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{% static 'lib/adminlte/css/adminlte.min.css' %}">
+  <!-- Google Font: Source Sans Pro -->
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+</head>
+
+
+
+<body class="hold-transition login-page h5">
+        <div class="login-box ">
+          <div class="login-logo">
+            <a href="/"><img id="logo" src="{% static "img/logo.png" %}" height="80" alt="Andola Salud Integral"></a>
+          </div>
+          <!-- /.login-logo -->
+          <div class="card">
+            <div class="card-body login-card-body">
+
+              <main class="post blog-post"> 
+                <h1>{% trans "Sign Out" %}</h1>
+                <p>{% trans 'Are you sure you want to sign out?' %}</p>
+                <form method="post" action="{% url 'account_logout' %}">
+                  {% csrf_token %}
+                  {% if redirect_field_value %}
+                  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+                  {% endif %}
+                  <button type="submit" class="btn btn-primary btn-block">{% trans 'Sign Out' %}</button>
+                </form>
+              </main>
+            </div>
+            <!-- /.login-card-body -->
+          </div>
+        </div>
+<!-- /.login-box -->
+</body>
+<!-- jQuery -->
+<script src="{% static 'lib/adminlte/plugins/jquery/jquery.min.js' %}"></script>
+<!-- Bootstrap 4 -->
+<script src="{% static 'lib/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<!-- overlayScrollbars -->
+<script src="{% static 'lib/adminlte/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js' %}"></script>
+<!-- AdminLTE App -->
+<script src="{% static 'lib/adminlte/js/adminlte.min.js' %}"></script>
+<script src="{% static 'lib/sweetalert2/sweetalert2.all.min.js' %}"></script>
+
+</html>

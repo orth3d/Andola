@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+
+ <section class="site-header index">
+    <div class="contenido-header">
+        <h1>Acupuntura, Quiropráctica, Psicología y Rehabilitación Física</h1>
+    </div>
+  </section>
+  
+    <div class="contenedor seccion">
+        <h3 class="fw-400 centrar-texto"><a href="/servicios">Nuestros Servicios</a></h3>
+        <div class="iconos-nuestrosservicios column-drop-flex"> 
+        
+            <div class="icono bloque_acupuntura">
+                <a href="{% url 'acupuntura' %}">
+                    <img src="{% static "img/acupuntura.svg" %}" alt="acupuntura" height="150px">
+                    <h2>Acupuntura</h2>
+                </a>
+                <p>Encargada de restablecer la dinámica de la sangre y la energía a través del estímulo con las agujas a los enerpuntos del cuerpo humano.</p>
+                
+            </div>  
+            <div class="icono bloque_quiropractica">
+                <a href="{% url 'quiropractica' %}">
+                    <img src="{% static "img/chiropractic.svg" %}" alt="quiropractica" height="150px">
+                    <h2>Quiropráctica</h2>
+                </a>
+                <p>Ajustes para la corrección de problemas posturales, aliviar el dolor y asistir la capacidad natural del cuerpo de sanarse a sí mismo.</p>
+                
+            </div>
+            <div class="icono bloque_psicologia">
+                <a href="{% url 'psicologia' %}">
+                    <img src="{% static "img/psicologia.svg" %}" alt="psicologia" height="150px">
+                    <h2>Psicología</h2>
+                </a>
+                <p>Acompañamiento terapéutico para promover la salud mental, el bienestar emocional y el proceso de autodescubrimiento. </p>
+                
+            </div>
+            <div class="icono bloque_rehabilitacion">
+                <a href="{% url 'rehabilitacion' %}">
+                    <img src="{% static "img/rehabilitation.svg" %}" alt="rehabilitacion" height="150px">
+                    <h2>Rehabilitación Física</h2>
+                </a>
+                <p>Tratamientos y técnicas aplicadas al paciente para recuperar la máxima funcionalidad posible tras de haber cursado por una lesión.</p>
+                
+            </div>
+        
+        </div>
+    </div>
+    
+    
+    <h3 class="fw-400 centrar-texto contenedor seccion"><a href="/nosotros">Acerca de Nosotros</a></h3>
+    <section class="contenido-in parallax">
+          
+        <div class="contenedor cont-nosotros">
+                
+                <p class="" >Andola es un espacio de bienestar, un lugar donde convergen profesionales de la salud y la población que 
+                    necesita de sus servicios para ayudarle a recuperar su bienestar desde un enfoque centrado en la persona.</p>
+                
+                <a href="/nosotros" class="boton boton-azul">Conócenos</a>
+        </div>
+    </section>
+
+    
+    <div class="seccion-inferior contenedor">
+        <section class="blog featured-posts no-padding-bottom">
+        <h3 class="centrar-texto fw-400">Publicaciones</h3>
+            <section class="featured-posts no-padding-top no-padding-bottom">
+                <div class="container">
+                    <!-- Post-->
+                    {% for obj in object_list %}
+                    <div class="row d-flex align-items-center mt-5 mb-5">
+                      <div class="imagen col-lg-5"><img src="{{ obj.thumbnail.url }}" alt="..."></div>
+                      <div class="text col-lg-7">
+                        <div class="text-inner d-flex align-items-center p-2">
+                          <div class="content">
+                            <header class="post-header">
+                              <div class="category">
+                              {% for cat in obj.categories.all %}
+                              <a href="{% url 'category' cat.id %}">{{ cat }}</a>
+                              {% endfor %}
+                              </div><a href="{{ obj.get_absolute_url }}">
+                                <h2 class="h4">{{ obj.title }}</h2></a>
+                            </header>
+                            <p>{{ obj.overview | safe }}</p>
+                            <footer class="post-footer d-flex align-items-center"><a href="{% url 'author' obj.author.id %}" class="author d-flex align-items-center flex-wrap">
+                                <div class="avatar"><img src="{{ obj.author.profile_picture.url }}" alt="..." class="img-fluid"></div>
+                                <div class="title"><span>{{ obj.author }}</span></div></a>
+                              <div class="date"><i class="icon-clock"></i>{{ obj.timestamp|date }}</div>
+                              <div class="comments"><i class="icon-comment"></i>{{ obj.comment_count }}</div>
+                            </footer>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+        </section>
+
+
+        <section class="testimoniales"> 
+            <h3 class="centrar-texto fw-400">Testimoniales</h3>
+            <div class="testimonial">
+                <blockquote>
+                    <p>Consectetur autem maxime facere dolorem deleniti, molestias excepturi! Dolor fugit pariatur veniam incidunt, eos eligendi accusantium voluptatem, laudantium, vitae iure aperiam!</p>
+                    <footer class="info-testimonial clearfix">
+                        <img src="{% static "img/mujer.jpeg" %}" alt="foto testimonial">
+                        <cite>- Margara Juanita</cite>
+                    </footer class="info-testimonial">
+                </blockquote>
+            </div>
+            <div class="testimonial">
+                <blockquote>
+                    <p>Consectetur autem maxime facere dolorem deleniti, molestias excepturi! Dolor fugit pariatur veniam incidunt, eos eligendi accusantium voluptatem, laudantium, vitae iure aperiam!</p>
+                    <footer class="info-testimonial clearfix">
+                        <img src="{% static "img/Hombre.jpg" %}" alt="foto testimonial">
+                        <cite>- Cosme Fulanito</cite>
+                    </footer class="info-testimonial">
+                </blockquote>
+            </div>
+        </section>
+    </div>
+    
+    <section class="encuentranos">
+            <h3 class="fw-400 centrar-texto contenedor seccion"><a href="/contacto">Encuéntranos</a></h3>
+            <div id="mapa" class="mapa">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3758.8970687762812!2d-99.03840068530208!3d19.588909986795706!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d1f1b7ca918ae7%3A0xad879f42f5d97f62!2sAndola%20Salud%20Integral!5e0!3m2!1ses-419!2smx!4v1587006538901!5m2!1ses-419!2smx" width="max-width" height="420" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+            </div>
+    </section>
+    <div class="contenedor agenda-cita">
+        <a href="/contacto" class="boton boton-azul">Agenda una cita</a>
+    </div>
+
+    <script>
+    {% if messages %}
+      var html = '<p style="font-size: 2rem;">';
+      {% for message in messages %}
+        html += '{{ message }}<br>';
+      {% endfor %}
+      html += '</p>';
+      Swal.fire({
+        title: '',
+        html: html,
+        icon: 'success'
+      });
+    {% endif %}
+  </script>
+    
+{% endblock content %}

@@ -1,0 +1,51 @@
+{% extends 'gestion/base_admin.html' %}
+{% block content %}
+{% load static %}
+
+
+
+<section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+           <h3 class="centrar-texto fw-400">{{ title }}</h3><!--  <h1>Blog</h1>-->
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+</section>
+
+<div class="container antibar">
+    
+    <div class="">
+        <main class="post blog-post col-lg-9 pb-5">
+            <form method="POST" action="" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div>
+                    <div class="alert alert-danger alert-dismissible">
+                      <h5><i class="icon fas fa-trash"></i> Eliminar </h5>
+                      ¿Estas seguro de querer eliminar {{ object.title }} del blog?
+                    </div>    
+                    <button class="btn btn-primary btn-flat" type="submit">
+                        <i class="fas fa-save">Aceptar</i>
+                    </button>
+                    <a href="{% url 'ClientsListView' %}" class="btn btn-info btn-flat">
+                        <i class="fas fa-times">Cancelar</i>
+                    </a>
+                </div>
+            </form>
+            <script>
+
+                $('form').on('submit', function(e) {
+                    e.preventDefault();
+                    var parameters = $(this).serializeArray()
+                    submitWithAjax(window.location.pathname, 'Eliminar', '¿Estás seguro de querer eliminar este artículo?', parameters, function(){
+                      location.href = '{{ list_url }}';
+                    });
+                });
+
+            </script>
+        </main>
+    </div>
+</div>
+
+{% endblock content %}

@@ -1,0 +1,63 @@
+{% extends 'gestion/base_admin.html' %}
+{% block content %}
+{% load static %}
+
+
+
+<section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+           <h3 class="centrar-texto fw-400">{{ title }}</h3><!--  <h1>Blog</h1>-->
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+</section>
+
+<div class="container antibar">
+    
+    <div class="">
+        <main class="post blog-post col-lg-9 pb-5">
+            {{ form.media }}
+            <form action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+                <div>
+                    <input type="hidden" name="action" value="{{ action }}">
+                    {% for field in form.visible_fields %}
+                        <div class="form-group">
+                            <label for="">{{ field.label }}</label>
+                            {{ field }}
+                        </div>
+                    {% endfor %}
+                    <button class="boton boton-azul" type="submit">Guardar</button>
+                </div>
+            </form>
+            <script>
+                {% if form.errors %}
+                    var errors = '';
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                           errors += '{{ error }}';
+                        {% endfor %}
+                    {% endfor %}
+                    Swal.fire({
+                        title: 'Error',
+                        text: errors,
+                        icon: 'error'
+                    })
+                {% endif %}
+
+                $('form').on('submit', function(e) {
+                    e.preventDefault();
+                    var parameters = new FormData(this);
+                    submitWithAjax(window.location.pathname, 'Guardar', '¿Estás seguro de querer guardar este registro?', parameters, function() {
+                        location.href = '{{ list_url }}';
+                    });
+                });
+
+            </script>
+        </main>
+    </div>
+</div>
+
+{% endblock content %}

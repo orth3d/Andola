@@ -1,0 +1,74 @@
+{% extends 'gestion/base_admin.html' %}
+{% block content %}
+{% load static %}
+
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+           <!--  <h1>Blog</h1>-->
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+    {% block javascript %}
+    <script type="application/javascript">
+      $(document).ready(function() {
+        $('#data').DataTable({responsive : true,
+                              "language": {url : '{% static 'lib/spanish.txt' %}'}});
+        $('.btnTest').on('click', function(){
+        })
+      });
+    </script>
+    {% endblock javascript %}
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+            <!-- Default box -->
+            <div class="card">
+              <div class="card-header">
+                
+                <h3 class="card-title"><i class="fas fa-search"></i> {{ title }} {{ date_now }}</h3>
+
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
+                    <i class="fas fa-minus"></i></button>
+                  <button type="button" class="btn btn-tool" data-card-widget="remove" data-toggle="tooltip" title="Remove">
+                    <i class="fas fa-times"></i></button>
+                </div>
+              </div>
+              <div class="card-body">
+                <div>
+                  <table class="table-hover" id="data"> <!--class="table table-hover table-dark"-->
+                    <thead class="thead-light">
+                    {% block columns %}
+                      <!-- columnas -->
+                    {% endblock columns %}
+                    </thead>
+                    <tbody>
+                    {% block rows %}
+                      <!-- filas -->
+                    {% endblock rows %}
+                    </tbody>
+                  </table>
+              </div>
+              <!-- /.card-body -->
+              
+              <div class="card-footer">
+              {% block buttons_list %}
+                <a href="{{ create_url }}" class="btn btn-primary btnTest">
+                  <i class="fas fa-plus"></i> Añadir Elemento
+                </a>
+              {% endblock buttons_list %}
+              </div>
+              <!-- /.card-footer-->
+            </div>
+            <!-- /.card -->
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- /.content -->
+{% endblock content %}

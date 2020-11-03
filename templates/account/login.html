@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+{% load static %}
+{% load i18n %}
+{% load account socialaccount %}
+{% load widget_tweaks %}
+
+{% block content %}
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Andola | Log in</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{% static "css/style.css" %}">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{% static 'lib/adminlte/plugins/fontawesome-free/css/all.min.css' %}">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- icheck bootstrap -->
+  <link rel="stylesheet" href="{% static 'lib/adminlte/plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{% static 'lib/adminlte/css/adminlte.min.css' %}">
+  <!-- Google Font: Source Sans Pro -->
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+  <script src="{% static 'lib/sweetalert2/sweetalert2.all.min.js' %}"></script>
+</head>
+
+<body class="hold-transition login-page h5">
+<div class="login-box ">
+  <div class="login-logo">
+    <a href="/"><img id="logo" src="{% static "img/logo.png" %}" height="80" alt="Andola Salud Integral"></a>
+  </div>
+  <!-- /.login-logo -->
+  <div class="card">
+    <div class="card-body login-card-body">
+      <p class="login-box-msg">Inicio de Sesión</p>
+
+      <form action="{% url 'account_login' %}" method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        {% if redirect_field_value %}
+        <div class="input-group mb-3">
+          <input type="hidden" class="form-control" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/><!-- -->
+        </div>
+        {% endif %}
+        
+        
+        <div class="row h5">
+          <div class="col-8">
+          </div>
+          <!-- /.col -->
+          <div class="col-4">
+            <button type="submit" class="btn btn-primary btn-block">Iniciar Sesión</button>
+          </div>
+          <!-- /.col -->
+        </div>
+      </form>
+
+      <p class="mb-1">
+        <a class="button secondaryAction" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+      </p>
+      {% blocktrans with site.name as site_name %}
+      <p class="mb-0">
+         <a href="{{ signup_url }}">Regístrate</a>
+      </p>
+      {% endblocktrans %}
+    </div>
+    <script>
+        {% if form.errors %}
+            var errors = '';
+            {% for field in form %}
+                {% for error in field.errors %}
+                  errors += '{{ error }}';
+                {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+              errors += '{{ error }}';
+            {% endfor %}
+            Swal.fire({
+                title: 'Error',
+                text: errors,
+                icon: 'error'
+            });
+        {% endif %}
+        {% comment %} $('form').on('submit', function(e) {
+            e.preventDefault();
+            var parameters = $(this).serializeArray()
+            
+        }); {% endcomment %}
+        
+    </script>
+    <!-- /.login-card-body -->
+  </div>
+</div>
+<!-- /.login-box -->
+
+
+<!-- jQuery -->
+<script src="{% static 'lib/adminlte/plugins/jquery/jquery.min.js' %}"></script>
+<!-- Bootstrap 4 -->
+<script src="{% static 'lib/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<!-- overlayScrollbars -->
+<script src="{% static 'lib/adminlte/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js' %}"></script>
+<!-- AdminLTE App -->
+<script src="{% static 'lib/adminlte/js/adminlte.min.js' %}"></script>
+
+</body>
+</html>
+
+{% endblock %}
