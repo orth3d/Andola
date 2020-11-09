@@ -3,11 +3,14 @@
 
 
 {% block content %}
-<!-- Block head -->
+<!-- Block head 
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>-->
     {% block head %}
         <link rel="stylesheet" href="{% static "css/caja.css" %}">
-        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
-        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+        <link href="{% static 'lib/select2-4.0.13/css/select2.min.css' %}" rel="stylesheet"/>
+        <link href="{% static 'lib/select2-4.0.13/css/select2-bootstrap4.min.css' %}" rel="stylesheet"/>
+        <script src="{% static 'lib/select2-4.0.13/js/select2.min.js' %}"></script>
         <script src="{% static "js/caja.js" %}"></script>
         <script src="{% static "lib/bootstrap-touchspin-4.3.0/jquery.bootstrap-touchspin.js" %}"></script>
         <script src="{% static 'lib/moment-2.25.3/moment-with-locales.js' %}"></script>
@@ -82,16 +85,22 @@
         <div class="datos-ticket">
             <h2>Ticket</h2>
             <div class="contenedor-ticket">
-            <form method="post">
+            <form id="frmSale" method="post">
                 <input type="hidden" name="action" value="{{ action }}">
-                <!--{% for field in form.visible_fields %} {% endfor %}-->
                     <div class="form-group">
                         <label>Fecha : </label>
                         {{ form.date_joined }}
                     </div>
                     <div class="form-group">
                         <label>Cliente : </label>
-                        {{ form.cli }}
+                        <div class="input-group">
+                            {{ form.cli }}
+                            <div class="input-group-append">
+                                <button class="btn-xs btn-success btn-flat btnAddClient" type="button"> 
+                                    <i class="fas fa-user-plus"></i>
+                                </button>
+                            </div>
+                        </div>
                     </div>
 
                 <table class="table table-bordered tbltckt" id="tblProducts">
@@ -121,7 +130,37 @@
                         {{ form.comment }}
                     </div>
                 <button class="boton boton-azul" type="submit">Guardar</button>
+
             </form>
+                <div class="modal fade" id="myModalClient" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <form id="frmClient" action="" method="POST" enctype="multipart/form-data">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel"><i class="fas fa-user-plus"></i> Nuevo Cliente</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="container-fluid">
+                                        <input type="hidden" name="action" value="add">
+                                        <input type="hidden" name="id" id="id" value="">
+                                        {% for field in frmClient.visible_fields %}
+                                            <div class="form-group">
+                                                <label for="">{{ field.label }}</label>
+                                                {{ field }}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="boton boton-azul"><i class="far fa-save"></i> Guardar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

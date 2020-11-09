@@ -127,23 +127,21 @@ $(function(){
             vents.list();
         });
 
-    // var cliente = $('.select2').select2('cliente')
-    // console.log(cliente);
-    // alert(data[0].text);
-    // alert(data[0].id);
-    var cliente = $('.select2').on('select2:select', function (e) {
-        cliente = e.params.data;
-        cliente = cliente.text;
-    });
     
-    if(cliente.length <= 2){
-        cliente = $(cliente[0]).children("option:selected").text();//$(cliente[1]).find('innerText').clone();
-    };
     
-    $('form').on('submit', function(e) {
-               
-        console.log(cliente);
+    $('#frmSale').on('submit', function(e) {
+        
+        var cliente = $('.select2').on('select2:select', function (e) {
+            cliente = e.params.data;
+            cliente = cliente.text;
+        });
 
+        if(cliente.length <= 2){
+            cliente = $(cliente[0]).children("option:selected").text();
+        } else if(cliente == null){
+            cliente = data.nombre;
+        };
+        
         e.preventDefault();
         if(vents.items.products.length === 0){
             message_error('Debe agregar al menos un producto');
@@ -163,6 +161,7 @@ $(function(){
           '<span class="badge badge-primary badge-pill">' + vents.items.products[i].cant + '</span></li>';
         }
         
+        console.log(cliente);
 
         productos += '</ul>'
         var content = '<div>' + cliente + '</div>' +

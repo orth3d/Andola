@@ -215,6 +215,18 @@ class CashRegister(CreateView):
                         det.subtotal = float(i['subtotal'])
                         det.save()
                     data = {'id': sale.id}
+            elif action == 'search_clients':
+                data = []
+                term = request.POST['term']
+                clies = Cliente.objects.filter(Q(nombre__icontains=term) | Q(apellido__icontains=term))[0:10]
+                for i in clies:
+                    item = i.toJSON()
+                    item['text'] = i.get_full_name()
+                    data.append(item)
+            elif action == 'create_client':
+                with transaction.atomic():
+                    frmClient = clientForm(request.POST)
+                    data = frmClient.save()
             else:
                 data['error'] = 'No ha ingresado a ninguna opción'
         except Exception as e:
@@ -229,6 +241,7 @@ class CashRegister(CreateView):
         context['action'] = 'add'
         context['fecha'] = date.today()
         context['det'] = []
+        context['frmClient'] = clientForm()
         return context
 
 class SaleListView(ListView):
@@ -318,6 +331,18 @@ class SaleUpdateView(UpdateView):
                         det.subtotal = float(i['subtotal'])
                         det.save()
                     data = {'id': sale.id}
+            elif action == 'search_clients':
+                data = []
+                term = request.POST['term']
+                clies = Cliente.objects.filter(Q(nombre__icontains=term) | Q(apellido__icontains=term))[0:10]
+                for i in clies:
+                    item = i.toJSON()
+                    item['text'] = i.get_full_name()
+                    data.append(item)
+            elif action == 'create_client':
+                with transaction.atomic():
+                    frmClient = clientForm(request.POST)
+                    data = frmClient.save()
             else:
                 data['error'] = 'No ha ingresado a ninguna opción'
         except Exception as e:
@@ -344,6 +369,7 @@ class SaleUpdateView(UpdateView):
         context['list_url'] = self.success_url
         context['action'] = 'edit'
         context['det'] = json.dumps(self.get_product_details())
+        context['frmClient'] = clientForm()
         return context
 
 
@@ -385,7 +411,7 @@ class SaleInvoicePdfView(View):
             template = get_template('gestion/invoice.html')
             context = {
                 'sale': Sale.objects.get(pk=self.kwargs['pk']),
-                'comp': {'name': 'ANDOLA SAS de CV', 'RFC': 'ASI213123', 'address': '55090 Ecatepec, Estado de México'},
+                'comp': {'name': 'ANDOLA SAS de CV', 'RFC': 'ASI180319S52', 'address': 'Nezahualcoyotl 45, Jajalpa Ecatepec 55090, Estado de México'},
                 'icon': '{}{}'.format(settings.STATIC_DIR, '/img/logosq.png')
             }
             html = template.render(context)

@@ -18,7 +18,8 @@ class clientForm(forms.ModelForm):
         form = super()
         try:
             if form.is_valid():
-                form.save()
+                instance = form.save()
+                data = instance.toJSON()
             else:
                 data['error'] = form.errors
         except Exception as e:

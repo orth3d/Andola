@@ -1,6 +1,7 @@
 # import json
 from django.db import models
 from django.forms import model_to_dict
+from datetime import date
 #from phonenumber_field.modelfields import PhoneNumberField
 
 
@@ -24,9 +25,17 @@ class Cliente(models.Model):
     def __str__(self):
         return str(self.nombre + ' ' + self.apellido)
 
+    def get_age(self):
+        today = date.today()
+        age =  today.year - self.fecha_nacimiento.year - ((today.month, today.day) < (self.fecha_nacimiento.month, self.fecha_nacimiento.day))
+        return age
+
+    def get_full_name(self):
+        return '{} {} / {} años'.format(self.nombre, self.apellido, self.get_age())
+
     def toJSON(self):
         item = model_to_dict(self)
-        # item['telefono'] = json.dumps(str(Cliente.telefono))
+        item['full_name'] = self.get_full_name()
         return item
 
     class Meta:

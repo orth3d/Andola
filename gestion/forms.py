@@ -1,12 +1,14 @@
 from django.forms import *
 from inventario.models import ProdServ
 from .models import Sale
+from clients.models import Cliente
 from datetime import datetime
 
 
 class SaleForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        # self.fields['cli'].queryset = Cliente.objects.none()
 
     class Meta:
         model = Sale
@@ -15,8 +17,8 @@ class SaleForm(ModelForm):
             'cli' : Select(attrs={
                 'autofocus': True,
                 'autocomplete': 'off',
-                'class': 'select2',
-                'style': 'width: 100%'
+                'class': 'custom-select select2',
+                # 'style': 'width: 100%'
             }),
             'date_joined': DateInput(
                 format='%Y-%m-%d', 
