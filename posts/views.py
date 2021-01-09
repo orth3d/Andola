@@ -9,7 +9,7 @@ from django.views.generic import DetailView, CreateView, UpdateView, DeleteView
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from marketing.models import Signup
-from .forms import CommentForm, PostForm
+from .forms import  PostForm 
 from .models import Post, Author, PostView, Category
 
 # Create your views here.
@@ -96,7 +96,6 @@ class PostDetailView(DetailView):
     model = Post
     template_name = 'blog/post.html'
     context_object_name = 'post'
-    form = CommentForm()
 
     def get_object(self):
         obj = super().get_object()
@@ -114,19 +113,7 @@ class PostDetailView(DetailView):
         context['most_recent'] = most_recent
         context['page_request_var'] = "page"
         context['category_count'] = category_count
-        context['form'] = self.form
         return context
-
-    def post(self, request, *args, **kwargs):
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            post = self.get_object()
-            form.instance.user = request.user
-            form.instance.post = post
-            form.save()
-            return redirect(reverse("post_detail", kwargs={
-                'pk': post.pk
-            }))
 
 class PostCreateView(CreateView):
     model = Post

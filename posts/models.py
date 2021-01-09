@@ -40,14 +40,6 @@ class Category(models.Model):
         verbose_name_plural = 'Categorias'
 
 
-class Comment(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    timestamp = models.DateTimeField(auto_now_add=True)
-    content = models.TextField()
-    post = models.ForeignKey('Post', related_name='comments', on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.user.username
 
 
 class Post(models.Model):
@@ -55,7 +47,6 @@ class Post(models.Model):
     overview = HTMLField(max_length=200, verbose_name='Descripción')
     timestamp = models.DateTimeField(auto_now_add=True)
     content = HTMLField(verbose_name='Contenido')
-    # comment_count = models.IntegerField(default=0)
     # view_count = models.IntegerField(default=0)
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     thumbnail = ProcessedImageField(processors=[ResizeToFill(640, 450)],
@@ -91,11 +82,4 @@ class Post(models.Model):
         item['categories'] = [{'name': i.categoria} for i in self.categories.all()]
         return item
 
-    @property
-    def get_comments(self):
-        return self.comments.all().order_by('-timestamp')
-
-    @property
-    def comment_count(self):
-        return Comment.objects.filter(post=self).count()
     

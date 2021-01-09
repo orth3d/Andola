@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import TextInput, Textarea, Select, FileInput
 from tinymce.widgets import TinyMCE
-from .models import Post, Comment, Author
+from .models import Post, Author 
 
 # class TinyMCEWidget(TinyMCE):
 #     def use_required_attribute(self, *args):
@@ -45,14 +45,3 @@ class PostForm(forms.ModelForm):
             data['error'] = str(e)
         return data
 
-
-class CommentForm(forms.ModelForm):
-    content = forms.CharField(widget=forms.Textarea(attrs={
-        'class':'form-control',
-        'placeholder': 'Escribe tu comentario',
-        'id': 'usercomment',
-        'rows': '4'
-    }))
-    class Meta:
-        model = Comment
-        fields = ('content', )

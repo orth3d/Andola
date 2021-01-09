@@ -28,7 +28,7 @@ SECRET_KEY = '95)pef94!45fjrvvbldw*j+v27o0agk1#d320+m2qk4#h6n_6p'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [] # '192.168.1.67'
+ALLOWED_HOSTS = [ ] # '192.168.1.67'
 
 
 # Application definition
@@ -210,6 +210,6 @@ SITE_ID = 1
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'andola.saludintegral@gmail.com'
-EMAIL_HOST_PASSWORD = 'oiksxliaeqytqxnb'
+EMAIL_HOST_PASSWORD = 'mzediatxmjirxdmd'
 EMAIL_USE_TLS = True
 # EMAIL_USE_SSL = False
