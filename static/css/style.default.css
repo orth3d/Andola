@@ -998,13 +998,13 @@ section.newsletter .submit:hover {
   section.newsletter input {
     font-size: 0.95em;
     width: 100%;
-    border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px;
   }
   section.newsletter .submit {
     position: static;
     width: 100%;
     margin-top: 10px;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
   }
 }
 
