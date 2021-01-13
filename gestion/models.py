@@ -50,7 +50,7 @@ class Sale(models.Model):
 
 class DetSale(models.Model):
     sale = models.ForeignKey(Sale, on_delete=models.CASCADE)
-    prod = models.ForeignKey(ProdServ, on_delete=models.CASCADE)
+    prod = models.ForeignKey(ProdServ, on_delete=models.SET(1))
     price = models.DecimalField(default=0.00, max_digits=9, decimal_places=2)
     cant = models.IntegerField(default=0)
     subcosto = models.DecimalField(default=0.00, max_digits=9, decimal_places=2)
