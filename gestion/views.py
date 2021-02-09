@@ -260,7 +260,7 @@ class SaleListView(ListView):
             if action == 'searchdata':
                 data = []
                 if request.user.is_staff:
-                    for i in Sale.objects.filter(added__isnull=False):#all():
+                    for i in Sale.objects.all():#filter(added__isnull=False):
                         data.append(i.toJSON())
                 else:
                     for i in Sale.objects.filter(date_joined=datetime.now()):
