@@ -204,6 +204,7 @@ class CashRegister(CreateView):
                     sale.total = float(vents['total'])
                     sale.costo = float(vents['costo'])
                     sale.comment = vents['comment']
+                    sale.added = request.user
                     sale.save()
 
                     for i in vents['products']:
@@ -259,7 +260,7 @@ class SaleListView(ListView):
             if action == 'searchdata':
                 data = []
                 if request.user.is_staff:
-                    for i in Sale.objects.all():
+                    for i in Sale.objects.filter(added__isnull=False):#all():
                         data.append(i.toJSON())
                 else:
                     for i in Sale.objects.filter(date_joined=datetime.now()):

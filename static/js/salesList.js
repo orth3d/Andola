@@ -63,8 +63,8 @@ $(function () {
         .on('click', 'a[rel="details"]', function () {
             var tr = tblSale.cell($(this).closest('td, li')).index();
             var data = tblSale.row(tr.row).data();
-            var comment = data.comment
-            console.log(comment);
+            var comment = data.comment;
+            console.log(data);
 
             $('#tblDet').DataTable({
                 responsive: true,
@@ -109,6 +109,7 @@ $(function () {
             });
 
             $('#comment').html('<br>'+'<h5>Comentarios: </h5>'+'<p>' + comment + '</p>');
+            $('#addedby').html('<br>'+'<p>Agregado por <b>' + data.added + '</b></p>');
             $('#myModalDet').modal('show');
         })
         .on('click', 'a[rel="delete"]', function (){

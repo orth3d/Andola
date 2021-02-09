@@ -5,6 +5,7 @@ from django.forms import model_to_dict
 from clients.models import Cliente
 from datetime import datetime
 from inventario.models import ProdServ
+from django.contrib.auth.models import User
 
 # class PrintableModel(models.Model):
 #     def __repr__(self):
@@ -29,6 +30,7 @@ class Sale(models.Model):
     costo = models.DecimalField(default=0.00, max_digits=9, decimal_places=2)
     total = models.DecimalField(default=0.00, max_digits=9, decimal_places=2)
     comment = models.CharField(verbose_name='Comentarios', unique=False, blank=True, max_length=200)
+    added = models.ForeignKey(User, on_delete=models.SET(1), null=True, verbose_name='Agregado por')
 
     def __str__(self):
         return self.cli.nombre
@@ -41,6 +43,7 @@ class Sale(models.Model):
         item['date_joined'] = self.date_joined.strftime('%Y-%m-%d')
         item['det'] = [i.toJSON() for i in self.detsale_set.all()]
         item['comment'] = self.comment
+        item['added'] = self.added.username
         return item
 
     class Meta:
