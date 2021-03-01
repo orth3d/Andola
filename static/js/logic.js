@@ -168,12 +168,13 @@ $(function(){
                         '<div class="text-justify">' + productos + '</div>'||vents.items.cli; //.products.cant) + ' ' + JSON.stringify(vents.items.products.cant) + '</div>';
         
         submitWithAjax(window.location.pathname, '¿Registrar venta?', content, parameters, function(response) {
-            alert_action('Notificación', '¿Imprimir ticket?', function() {
-                window.open('/gest/sales/invoice/'+ response.id +'/', '_blank');
-                location.href = '/gest/caja/';
-            }, function() {
-                location.href = '/gest/caja/';
-            });
+            // alert_action('Notificación', '¿Imprimir ticket?', function() {
+            //     window.open('/gest/sales/invoice/'+ response.id +'/', '_blank');
+            //     location.href = '/gest/caja/';
+            // }, function() {
+            //     location.href = '/gest/caja/';
+            // });
+            location.href = '/gest/sales/';
         });
     });
 
