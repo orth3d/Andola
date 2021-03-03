@@ -15,6 +15,12 @@
         </div>
         <br>
         <div class="row">
+            <div class="col-lg-12">
+            <div id="container-semi"></div>
+            </div>
+        </div>
+        <br>
+        <div class="row">
             <div class="col-sm">
                 <div id="container-pieP"></div>
             </div>
@@ -30,7 +36,7 @@
         
         var graphcolumn = Highcharts.chart('container', {
             title: {
-                text: 'Reporte Anual de Ventas'
+                text: 'Reporte Mensual de Contabilidad'
             },
             subtitle: {
                 text: 'Andola SAS de CV'
@@ -59,7 +65,7 @@
             },
             labels: {
                 items: [{
-                    html: 'Total Anual',
+                    // html: 'Total Anual',
                     style: {
                         left: '50px',
                         top: '18px',
@@ -72,7 +78,6 @@
             },
         });
 
-        // console.log(get_graph_sales_product_month);
         var graphpieP = Highcharts.chart('container-pieP', {
             chart: {
                 plotBackgroundColor: null,
@@ -81,7 +86,7 @@
                 type: 'pie'
             },
             title: {
-                text: '% Productos vendidos este mes'
+                text: '% Productos vendidos este año'
             },
             tooltip: {
                 pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -111,7 +116,7 @@
                 type: 'pie'
             },
             title: {
-                text: '% Servicios vendidos este mes'
+                text: '% Servicios vendidos este año'
             },
             tooltip: {
                 pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -133,6 +138,65 @@
             },
         });
 
+        var graphSemi = Highcharts.chart('container-semi', {
+          chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: 0,
+            plotShadow: false
+          },
+          title: {
+            text: 'Balance Anual' + '<br>' +'Total',
+            align: 'center',
+            verticalAlign: 'middle',
+            y: 60
+          },
+          tooltip: {
+            pointFormat: '{series.name}: <b>{point.y:.2f}</b>'
+          },
+          accessibility: {
+            point: {
+              valueSuffix: '%'
+            }
+          },
+          plotOptions: {
+            pie: {
+              dataLabels: {
+                enabled: true,
+                distance: -50,
+                style: {
+                  fontWeight: 'bold',
+                  color: 'white'
+                }
+              },
+              startAngle: -90,
+              endAngle: 90,
+              center: ['50%', '75%'],
+              size: '110%'
+            }
+          },
+          series: [{
+            type: 'pie',
+            name: '$',
+            innerSize: '50%',
+            data: [{
+                    name: 'Ingresos',
+                    y: {{ graph_sales_year_month.totAnual|safe }},
+                    color: Highcharts.getOptions().colors[0],
+                    sliced: true,
+                }, {
+                    name: 'Gastos',
+                    y: {{ graph_sales_year_month.gasAnual|safe }},
+                    color: Highcharts.getOptions().colors[1],
+                    sliced: true,
+                }, {
+                    name: 'Utilidad',
+                    y: {{ graph_sales_year_month.utiAnual|safe }},
+                    color: Highcharts.getOptions().colors[2],
+                    sliced: true,
+                }],
+          }]
+        });
+
         function get_graph_sales_year_month() {
             $.ajax({
                 url: window.location.pathname,
@@ -150,7 +214,7 @@
                     });
                     graphcolumn.addSeries({
                         type: 'column',
-                        name: 'Egresos',
+                        name: 'Gastos',
                         data: {{ graph_sales_year_month.gasto|safe }}
                     });
                     graphcolumn.addSeries({
@@ -163,32 +227,6 @@
                             fillColor: 'white'
                         }
                     });
-                    graphcolumn.addSeries({
-                        type: 'pie',
-                        name: '$',
-                        data: [{
-                            name: 'Ingresos',
-                            y: {{ graph_sales_year_month.totAnual|safe }},
-                            color: Highcharts.getOptions().colors[0],
-                            sliced: true,
-                        }, {
-                            name: 'Gastos',
-                            y: {{ graph_sales_year_month.gasAnual|safe }},
-                            color: Highcharts.getOptions().colors[1],
-                            sliced: true,
-                        }, {
-                            name: 'Utilidad',
-                            y: {{ graph_sales_year_month.utiAnual|safe }},
-                            color: Highcharts.getOptions().colors[2],
-                            sliced: true,
-                        }],
-                        center: [200, 80],
-                        size: 150,
-                        showInLegend: false,
-                        dataLabels: {
-                            enabled: false
-                        }
-                    });
                     return false;
                 }
                 message_error(data.error);
@@ -199,12 +237,12 @@
             });
         }
 
-        function get_graph_sales_product_month() {
+        function get_graph_sales_product_year() {
             $.ajax({
                 url: window.location.pathname,
                 type: 'POST',
                 data: {
-                    'action': 'get_graph_sales_product_month'
+                    'action': 'get_graph_sales_product_year'
                 },
                 dataType: 'json',
             }).done(function (data) {
@@ -221,12 +259,12 @@
             });
         }
 
-        function get_graph_sales_service_month() {
+        function get_graph_sales_service_year() {
             $.ajax({
                 url: window.location.pathname,
                 type: 'POST',
                 data: {
-                    'action': 'get_graph_sales_service_month'
+                    'action': 'get_graph_sales_service_year'
                 },
                 dataType: 'json',
             }).done(function (data) {
@@ -245,8 +283,8 @@
 
         $(function (){
             get_graph_sales_year_month();
-            get_graph_sales_product_month();
-            get_graph_sales_service_month();
+            get_graph_sales_product_year();
+            get_graph_sales_service_year();
         })
     </script>
 

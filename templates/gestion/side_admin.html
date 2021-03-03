@@ -96,7 +96,17 @@
                 </a>
               </li>  
             </ul>
-          </li>  
+          </li>
+          <li class="nav-item">
+            {% if user.is_staff %}
+              <a href="{% url 'ReportSaleView' %}" class="nav-link">
+              <i class="nav-icon fas fa-cart-plus"></i>
+              <p>
+                Compras
+              </p>
+            {% endif %}
+            </a>
+          </li> 
       </nav>
       <!-- /.sidebar-menu -->
     </div>

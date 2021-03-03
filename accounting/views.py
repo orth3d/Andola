@@ -97,6 +97,18 @@ class DashboardView(TemplateView):
                     'colorByPoint': True,
                     'data': self.get_graph_sales_service_month(),
                 }
+            elif action == 'get_graph_sales_product_year':
+                data = {
+                    'name': 'Porcentaje',
+                    'colorByPoint': True,
+                    'data': self.get_graph_sales_product_year(),
+                }
+            elif action == 'get_graph_sales_service_year':
+                data = {
+                    'name': 'Porcentaje',
+                    'colorByPoint': True,
+                    'data': self.get_graph_sales_service_year(),
+                }
             else:
                 data['error'] = 'Ha ocurrido un error'
         except Exception as e:
@@ -160,6 +172,37 @@ class DashboardView(TemplateView):
             pass
         return data
 
+    def get_graph_sales_product_year(self):
+        data = []
+        year = datetime.now().year
+        try:
+            for p in ProdServ.objects.filter(categoria='P'):
+                total = DetSale.objects.filter(sale__date_joined__year= year, prod_id=p.id).aggregate(
+                    r=Coalesce(Sum('subtotal'), 0)).get('r')
+                if total > 0:
+                    data.append({
+                        'name': p.nombre,
+                        'y': float(total)
+                    })
+        except:
+            pass
+        return data
+
+    def get_graph_sales_service_year(self):
+        data = []
+        year = datetime.now().year
+        try:
+            for p in ProdServ.objects.filter(categoria='S'):
+                total = DetSale.objects.filter(sale__date_joined__year= year, prod_id=p.id).aggregate(
+                    r=Coalesce(Sum('subtotal'), 0)).get('r')
+                if total > 0:
+                    data.append({
+                        'name': p.nombre,
+                        'y': float(total)
+                    })
+        except:
+            pass
+        return data
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
