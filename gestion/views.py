@@ -14,7 +14,8 @@ import json
 from posts.models import Post
 from clients.models import Cliente
 from clients.forms import clientForm
-from inventario.models import ProdServ
+from inventario.forms import proveedorForm
+from inventario.models import ProdServ, Proveedor, CategoryProv # SubCategoryProv
 from gestion.models import Sale, DetSale
 from .forms import SaleForm
 import os
@@ -117,60 +118,64 @@ class ClientsListView(TemplateView):
         context['form'] = clientForm()
         return context
 
-class ClientAddView(CreateView):
-    model = Cliente
-    form_class = clientForm
-    template_name = 'gestion/client_create.html'
-    success_url = reverse_lazy('ClientsListView')
-    
+class ProveedoresListView(TemplateView):
+    template_name = 'gestion/proveedores_list.html'
+    # @method_decorator(csrf_exempt)
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
-
     def post(self, request, *args, **kwargs):
         data = {}
         try:
             action = request.POST['action']
-            if action == 'add':
-                form = self.get_form()
-                data = form.save()
+            if action == 'searchdata':
+                data = []
+                for i in Proveedor.objects.all():
+                    data.append(i.toJSON())
+            # elif action =='add':
+            #     prov = Proveedor()
+            #     prov.nombre = request.POST['nombre']
+            #     prov.categoria_id = request.POST['categoria']
+            #     prov.subcategoria_id = request.POST['subcategoria']
+            #     prov.tel1 = request.POST['tel1']
+            #     prov.tel2 = request.POST['tel2']
+            #     prov.mail = request.POST['mail']
+            #     prov.address = request.POST['address']
+            #     prov.website = request.POST['website']
+            #     prov.location = request.POST['location']
+            #     prov.save()
+            # elif action =='edit':
+            #     prov = Proveedor.objects.get(pk=request.POST['id'])
+            #     prov.nombre = request.POST['nombre']
+            #     prov.categoria = request.POST['categoria']
+            #     prov.subcategoria = request.POST['subcategoria']
+            #     prov.tel1 = request.POST['tel1']
+            #     prov.tel2 = request.POST['tel2']
+            #     prov.mail = request.POST['mail']
+            #     prov.address = request.POST['address']
+            #     prov.website = request.POST['website']
+            #     prov.location = request.POST['location']
+            #     prov.save()
+            elif action =='delete':
+                prov = Proveedor.objects.get(pk=request.POST['id'])
+                prov.delete()
+            elif action =='search_category_id':
+                data = [{'id': '', 'text': '---------'}]
+                # for i in SubCategoryProv.objects.filter(categoria_id=request.POST['id']):
+                    # data.append({'id': i.id, 'text': i.name, 'data': i.categoria.toJSON()})
             else:
-                data['error'] = 'No ha ingresado opción'
+                data['error'] = 'Ha ocurrido un error'
         except Exception as e:
             data['error'] = str(e)
-        return JsonResponse(data)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = 'Nuevo Cliente'
-        context['entity'] = 'Clientes'
-        context['list_url'] = reverse_lazy('ClientsListView')
-        context['action'] = 'add'
-        return context
-
-class ClientFormView(FormView):
-    form_class = clientForm
-    template_name = 'gestion/client_create.html'
-    success_url = reverse_lazy('ClientsListView')
-
-    @method_decorator(login_required)
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
-
-    def form_valid(self, form):
+        return JsonResponse(data, safe=False)
         
-        return super().form_valid(form)
-
-    def form_invalid(self, form):
-
-        return super().form_invalid(form)
-    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Form | Cliente'
-        context['entity'] = 'Clientes'
-        context['list_url'] = reverse_lazy('ClientsListView')
-        context['action'] = 'add'
+        context['title'] = 'Listado de Proveedores'
+        context['create_url'] = reverse_lazy('prov_create')
+        context['list_url'] = reverse_lazy('gestion:proveedor')
+        context['entity'] = 'Proveedores'
+        context['form'] = proveedorForm()
         return context
 
 class CashRegister(CreateView):
@@ -372,7 +377,6 @@ class SaleUpdateView(UpdateView):
         context['det'] = json.dumps(self.get_product_details())
         context['frmClient'] = clientForm()
         return context
-
 
 class SaleInvoicePdfView(View):
 

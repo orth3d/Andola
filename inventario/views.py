@@ -5,8 +5,8 @@ from django.views.generic import TemplateView, ListView, CreateView, UpdateView,
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_protect
 from django.utils.decorators import method_decorator
-from inventario.models import ProdServ
-from inventario.forms import ProdServForm
+from inventario.models import ProdServ, Proveedor #, SubCategoryProv
+from inventario.forms import ProdServForm, proveedorForm
 
 # Create your views here.
 class ProductListView(TemplateView):
@@ -112,4 +112,73 @@ class ServiceListView(TemplateView):
         context['list_url'] = reverse_lazy('ProductListView')
         context['entity'] = 'Productos'
         context['form'] = ProdServForm()
+        return context
+
+class ProveedorCreateView(CreateView):
+    model = Proveedor
+    form_class = proveedorForm
+    template_name = 'gestion/prov_create.html'
+    success_url = reverse_lazy('ProveedoresListView')
+    url_redirect = success_url
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        data = {}
+        try:
+            action = request.POST['action']
+            # if action == 'search_categoria_id':
+            #     data = []
+                # for i in SubCategoryProv.objects.filter(categoria_id=request.POST['id']):
+                    # data.append({'id': i.id, 'name': i.name})
+            if action == 'add':
+                form = self.get_form()
+                data = form.save(commit=False)
+            else:
+                data['error'] = 'No ha ingresado ninguna opción'
+        except Exception as e:
+            data['error'] = str(e)
+        return JsonResponse(data, safe=False)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Crear nuevo Proveedor'
+        context['entity'] = 'Proveedor'
+        context['list_url'] = self.success_url # reverse_lazy('ProveedoresListView')
+        context['action'] = 'add'
+        return context
+
+class ProveedorUpdateView(UpdateView):
+    model = Proveedor
+    form_class = proveedorForm
+    template_name = 'gestion/prov_create.html'
+    success_url = reverse_lazy('ProveedoresListView')
+    url_redirect = success_url
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        data = {}
+        try:
+            action = request.POST['action']
+            if action == 'edit':
+                form = self.get_form()
+                data = form.save()
+            else:
+                data['error'] = 'No ha ingresado opción'
+        except Exception as e:
+            data['error'] = str(e)
+        return JsonResponse(data)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Editar Proveedor'
+        context['entity'] = 'Proveedor'
+        context['list_url'] = self.success_url
+        context['action'] = 'edit'
         return context

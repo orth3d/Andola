@@ -87,6 +87,61 @@
             <!-- /.card -->
           </div>
         </div>
+          <div class="col-12">
+            <!-- Default box -->
+            <div class="card">
+              <div class="card-header">
+                
+                <h3 class="card-title"><i class="fas fa-chart-bar"></i> {{ title }} {{ date_now }}</h3>
+
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
+                    <i class="fas fa-minus"></i></button>
+                  <button type="button" class="btn btn-tool" data-card-widget="remove" data-toggle="tooltip" title="Remove">
+                    <i class="fas fa-times"></i></button>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <label for="">Rango de Fechas:</label>
+                        {{ form.date_range }}
+                    </div>
+                </div>
+                <div>
+                <hr>
+                  <table class="table-hover" id="data"> <!--class="table table-hover table-dark"-->
+                    <thead class="thead-light">
+                    {% block columns1 %}
+                        <th scope="col" style="width: 10%;">Nro</th>
+                        <th scope="col" style="width: 30%;">Cliente</th>
+                        <th scope="col" style="width: 20%;">Fecha de registro</th>
+                        <th scope="col" style="width: 20%;">Total</th>
+                        <th scope="col" style="width: 20%;">Costo</th>
+                        <th></th>
+                      <!-- columnas -->
+                    {% endblock columns1 %}
+                    </thead>
+                    <tbody>
+                    </tbody>
+                  </table>
+              </div>
+              <!-- /.card-body -->
+              
+              <div class="card-footer">
+              {% block buttons_lis1 %}
+                <a href="{{ list_url }}" class="btn btn-success">
+                  <i class="fas fa-sync"></i> Actualizar
+                </a>
+                <a href="{% url 'SaleListView' %}" class="btn btn-secondary">
+                  Todas las ventas
+                </a>
+              {% endblock buttons_lis1 %}
+              </div>
+              <!-- /.card-footer-->
+            </div>
+            <!-- /.card -->
+          </div>
       </div>
     </section>
     <!-- /.content -->

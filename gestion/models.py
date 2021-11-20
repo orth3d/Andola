@@ -30,7 +30,7 @@ class Sale(models.Model):
     costo = models.DecimalField(default=0.00, max_digits=9, decimal_places=2)
     total = models.DecimalField(default=0.00, max_digits=9, decimal_places=2)
     comment = models.CharField(verbose_name='Comentarios', unique=False, blank=True, max_length=200)
-    added = models.ForeignKey(User, on_delete=models.SET(1), null=True, verbose_name='Agregado por')
+    added = models.ForeignKey(User, default=1, on_delete=models.SET(1), null=False, verbose_name='Agregado por')
 
     def __str__(self):
         return self.cli.nombre
