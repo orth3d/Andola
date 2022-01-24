@@ -60,7 +60,7 @@
           </li>
           <li class="nav-item">
             <a href="{% url 'ClientsListView' %}" class="nav-link">
-              <i class="nav-icon fas fa-users"></i>
+              <i class="nav-icon fas fa-address-card"></i>
               <p>
                 Clientes
               </p>
@@ -94,18 +94,22 @@
                   <i class="far fa-circle nav-icon"></i>
                   <p>Servicios</p>
                 </a>
-              </li>  
-              <li class="nav-item">
-                <a href="{% url 'ProveedoresListView' %}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Proveedores</p>
-                </a>
-              </li>  
+              </li>   
             </ul>
           </li>
           <li class="nav-item">
             {% if user.is_staff %}
-              <a href="{% url 'ReportSaleView' %}" class="nav-link">
+              <a href="{% url 'ProveedoresListView' %}" class="nav-link">
+              <i class="nav-icon fas fa-address-book"></i>
+              <p>
+                Proveedores
+              </p>
+            {% endif %}
+            </a>
+          </li> 
+          <li class="nav-item">
+            {% if user.is_staff %}
+              <a href="{% url 'PurchaseRegister' %}" class="nav-link">
               <i class="nav-icon fas fa-cart-plus"></i>
               <p>
                 Compras

@@ -1,0 +1,172 @@
+{% extends 'gestion/base_admin.html' %}
+{% load static %}
+
+
+{% block content %}
+    {% block head %}
+        <link rel="stylesheet" href="{% static "css/caja.css" %}">
+        <link href="{% static 'lib/select2-4.0.13/css/select2.min.css' %}" rel="stylesheet"/>
+        <link href="{% static 'lib/select2-4.0.13/css/select2-bootstrap4.min.css' %}" rel="stylesheet"/>
+        <script src="{% static 'lib/select2-4.0.13/js/select2.min.js' %}"></script>
+        <script src="{% static "js/compras.js" %}"></script>
+        <script src="{% static "lib/bootstrap-touchspin-4.3.0/jquery.bootstrap-touchspin.js" %}"></script>
+        <script src="{% static 'lib/moment-2.25.3/moment-with-locales.js' %}"></script>
+        <script src="{% static "lib/tempusdominus-bootstrap-4/tempusdominus-bootstrap-4.min.js" %}"></script>
+        <link rel="stylesheet" href="{% static "lib/tempusdominus-bootstrap-4/tempusdominus-bootstrap-4.min.css" %}">
+    {% endblock head %}
+    
+    <header class="header-internas">
+        
+    </header>
+
+    <div class="contenedor contenedor-caja">
+        <div class="datos-prodyserv" id="datos-prodyserv" >
+            <nav class="menu-pys">
+                <a href="#compras"><i class="" aria-hidden="true"></i>Compras</a>
+                <a href="#pagos"><i class="" aria-hidden="true"></i>Pagos</a>
+            </nav>
+            <div class="datos-compras ocultar clearfix" id="compras">
+                <ul class="articulos-andola">
+                {% for obj in articulos %}
+                    <li class="servicio-andola">
+                        <div class="imagen-servicio-caja">
+                            <img src="{{ obj.thumbnail.url }}" alt="{{ obj.nombre }}">
+                        </div>
+                        <div class="descripcion-servicio">
+                                <h3>{{ obj.nombre }}</h5>
+                            <p class="precio">$ {{ obj.precio }}</p>
+                            
+                            <label>Cantidad: </label>
+                            <input class="form-control input-sm" name="ttt" type="number" min="0" id="cant{{ obj.nombre }}" size="3" value="1">
+                            <script>
+                                $("#cant{{ obj.nombre }}").TouchSpin({
+                                    min: 1,
+                                    max: 10000,
+                                    step: 1,
+                                });
+                            </script>
+                            <button class="boton boton-azul btnAdd" id="{{ obj.id }}">Agregar</button>
+                        </div>
+                    </li>
+                {% endfor %}
+                </ul>
+            </div>
+            <div class="datos-productos ocultar clearfix" id="productos" name="action" value="productos">
+                <ul class="productos-andola">
+                {% for obj in productos %}
+                    <li class="producto-andola producto-herbolaria">
+                        <div class="imagen-producto-caja">
+                            <img src="{{ obj.thumbnail.url }}" alt="{{ obj.nombre }}">
+                        </div>
+                        <div class="descripcion-producto">
+                            <h3>{{ obj.nombre }}</h3>
+                            <p class="precio">$ {{ obj.precio }}</p>
+                            <label>Cantidad: </label>
+                            <input class="form-control input-sm" type="number" min="0" id="cant{{ obj.nombre }}" size="3" value="1">
+                            <script>
+                                $("#cant{{ obj.nombre }}").TouchSpin({
+                                    min: 1,
+                                    max: 10000,
+                                    step: 1,
+                                });
+                            </script>
+                            <button class="boton boton-azul btnAdd" id="{{ obj.id }}">Agregar</button>
+                        </div>
+                    </li>
+                {% endfor %}
+                </ul>
+            </div>
+            <script type="application/javascript" src="{% static "js/purchlogic.js" %}"></script>
+        </div>
+        
+        <div class="datos-ticket">
+            <h2>Ticket</h2>
+            <div class="contenedor-ticket">
+            <form id="frmPurch" method="post">
+                <input type="hidden" name="action" value="{{ action }}">
+                    <div class="form-group">
+                        <label>Fecha : </label>
+                        {{ form.date_joined }}
+                    </div>
+                    <div class="form-group">
+                        <label>Proveedor : </label>
+                        <div class="input-group">
+                            {{ form.proveedor }}
+                            <div class="input-group-append">
+                                <button class="btn-xs btn-success btn-flat btnAddProveedor" type="button"> 
+                                    <i class="fas fa-user-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                <table class="table table-bordered tbltckt" id="tblProducts">
+                    <thead>
+                        <tr>
+                            <th>Eliminar</th>
+                            <th>Producto</th>
+                            <th>PVP</th>
+                            <th>Cantidad</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody><!---->
+                    
+                </table>
+                    <button type="button" class="boton boton-peligro btn-xs btnRemoveAll"> 
+                        <i class="fas fa-trash"></i> Eliminar todos
+                    </button>
+                    
+                    <div class="form-group">
+                        <label>Total : </label>
+                        {{ form.total }}
+                    </div>
+                    <div class="form-group">
+                        <label>Comentarios : </label>
+                        {{ form.comment }}
+                    </div>
+                <button class="boton boton-azul" type="submit">Guardar</button>
+
+            </form>
+                <div class="modal fade" id="myModalProveedor" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <form id="frmProveedor" action="" method="POST" enctype="multipart/form-data">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel"><i class="fas fa-user-plus"></i>Nuevo Proveedor</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="container-fluid">
+                                        <input type="hidden" name="action" value="add">
+                                        <input type="hidden" name="id" id="id" value="">
+                                        {% for field in frmProveedor.visible_fields %}
+                                            <div class="form-group">
+                                                <label for="">{{ field.label }}</label>
+                                                {{ field }}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="boton boton-azul"><i class="far fa-save"></i> Guardar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        vents.items.products = {{ det|safe }};
+        vents.list();
+    </script>
+
+    
+
+{% endblock content %}

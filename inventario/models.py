@@ -33,27 +33,12 @@ class ProdServ(models.Model):
         verbose_name = 'Producto o Servicio'
         verbose_name_plural = 'Productos o Servicios'
 
-class CategoryProv(models.Model):
-    CATEGO_CHOICES = (
-        ('Productos', 'Productos'),
-        ('Servicios', 'Servicios'),
-        ('Recursos', 'Recursos'),
-    )
-    name = models.CharField(max_length=10, choices=CATEGO_CHOICES, default='Productos')
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        verbose_name = 'Categoria del Proveedor'
-        verbose_name_plural = 'Categorias de los proveedores'
-
-    def toJSON(self):
-        item = model_to_dict(self)
-        item['name'] =  self.name
-        return item
-
 class Proveedor(models.Model):
+    CATEGO_CHOICES = (
+        ('P', 'Productos'),
+        ('S', 'Servicios'),
+        ('R', 'Recursos'),
+    )
     LOCATION_CHOICES = (
         ('N', 'Norte'),
         ('S', 'Sur'),
@@ -61,30 +46,54 @@ class Proveedor(models.Model):
         ('W', 'Poniente'),
     )
     nombre = models.CharField(max_length=100, verbose_name='Nombre', unique=True)
-    categoria = models.ForeignKey(CategoryProv, default=1, on_delete=models.SET(1), max_length=15, verbose_name='Categoria', unique=False, blank=False)
-    # subcategoria = models.ForeignKey(SubCategoryProv, on_delete=models.SET(1), max_length=15, verbose_name='Subcategoria', unique=False, blank=False)#models.ForeignKey(SubCategoryProv, on_delete=models.CASCADE)
+    categoria = models.CharField(max_length=1, choices=CATEGO_CHOICES, verbose_name='Categoria', default='P', unique=False, blank=False)
     tel1 = models.CharField(max_length=15, verbose_name='Teléfono', unique=True, blank=False)
     tel2 = models.CharField(max_length=15, verbose_name='Teléfono 2', unique=False, blank=True)
     mail = models.EmailField(max_length=64, verbose_name='e-mail', unique=False, blank=True)
     address = models.CharField(max_length=264, verbose_name='Dirección', unique=False, blank=True)
     website = models.URLField(max_length=100, verbose_name='Website', unique=False, blank=True)
     location = models.CharField(max_length=1, choices=LOCATION_CHOICES, verbose_name='Ubicación',  default='N')
+    keywords = models.CharField(max_length=100, verbose_name='Keywords', unique=False, blank=True)
     def __str__(self):
         return self.nombre
 
     def toJSON(self):
         item = model_to_dict(self)
-        item['nombre'] = self.nombre
-        item['categoria'] = self.categoria.name
-        # item['subcategoria'] = self.subcategoria.name
-        item['tel1'] = self.tel1
-        item['tel2'] = self.tel2
-        item['mail'] = self.mail
-        item['address'] = self.address
-        item['website'] = self.website
-        item['location'] = self.location
+        # item['nombre'] = self.nombre
+        # item['categoria'] = self.categoria
+        # item['tel1'] = self.tel1
+        # item['tel2'] = self.tel2
+        # item['mail'] = self.mail
+        # item['address'] = self.address
+        # item['website'] = self.website
+        # item['location'] = self.location
         return item
     class Meta:
         verbose_name = 'Proveedor'
         verbose_name_plural = 'Proveedores'
         ordering = ['id']
+
+class Articulo(models.Model):
+    CATEGO_CHOICES = (
+        ('A', 'Articulo'),
+        ('S', 'Servicio'),
+    )
+    nombre = models.CharField(max_length=100, verbose_name='Nombre', unique=True)
+    categoria = models.CharField(max_length=1, choices=CATEGO_CHOICES, default='P')
+    precio = models.FloatField(default=0)
+    descripcion = models.CharField(max_length=150, verbose_name='Descripción', blank=True, unique=False)
+    
+    def __str__(self):
+        return self.nombre
+
+    def toJSON(self):
+        item = model_to_dict(self)
+        item['nombre'] =  self.nombre
+        item['categoria'] = self.categoria
+        item['precio'] =  self.precio
+        item['descripcion'] =  self.descripcion
+        return item
+
+    class Meta:
+        verbose_name = 'Articulo o Servicio'
+        verbose_name_plural = 'Articulos o Servicios'

@@ -11,13 +11,14 @@ from django.utils.decorators import method_decorator
 # from django.views.decorators.csrf import csrf_exempt
 from datetime import *
 import json
+# from AnDjo.inventario.models import Articulo
 from posts.models import Post
 from clients.models import Cliente
 from clients.forms import clientForm
 from inventario.forms import proveedorForm
-from inventario.models import ProdServ, Proveedor, CategoryProv # SubCategoryProv
-from gestion.models import Sale, DetSale
-from .forms import SaleForm
+from inventario.models import ProdServ, Proveedor, Articulo
+from gestion.models import Sale, DetSale, Purchase, DetPurchase
+from .forms import SaleForm, PurchaseForm
 import os
 from django.conf import settings
 from django.template.loader import get_template
@@ -67,8 +68,6 @@ class BlogListView(ListView):
    
 class ClientsListView(TemplateView):
     template_name = 'gestion/clients_list.html'
-
-    # @method_decorator(csrf_exempt)
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
@@ -120,7 +119,6 @@ class ClientsListView(TemplateView):
 
 class ProveedoresListView(TemplateView):
     template_name = 'gestion/proveedores_list.html'
-    # @method_decorator(csrf_exempt)
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
@@ -132,37 +130,33 @@ class ProveedoresListView(TemplateView):
                 data = []
                 for i in Proveedor.objects.all():
                     data.append(i.toJSON())
-            # elif action =='add':
-            #     prov = Proveedor()
-            #     prov.nombre = request.POST['nombre']
-            #     prov.categoria_id = request.POST['categoria']
-            #     prov.subcategoria_id = request.POST['subcategoria']
-            #     prov.tel1 = request.POST['tel1']
-            #     prov.tel2 = request.POST['tel2']
-            #     prov.mail = request.POST['mail']
-            #     prov.address = request.POST['address']
-            #     prov.website = request.POST['website']
-            #     prov.location = request.POST['location']
-            #     prov.save()
-            # elif action =='edit':
-            #     prov = Proveedor.objects.get(pk=request.POST['id'])
-            #     prov.nombre = request.POST['nombre']
-            #     prov.categoria = request.POST['categoria']
-            #     prov.subcategoria = request.POST['subcategoria']
-            #     prov.tel1 = request.POST['tel1']
-            #     prov.tel2 = request.POST['tel2']
-            #     prov.mail = request.POST['mail']
-            #     prov.address = request.POST['address']
-            #     prov.website = request.POST['website']
-            #     prov.location = request.POST['location']
-            #     prov.save()
+            elif action =='add':
+                prov = Proveedor()
+                prov.nombre = request.POST['nombre']
+                prov.categoria = request.POST['categoria']
+                prov.tel1 = request.POST['tel1']
+                prov.tel2 = request.POST['tel2']
+                prov.mail = request.POST['mail']
+                prov.address = request.POST['address']
+                prov.website = request.POST['website']
+                prov.location = request.POST['location']
+                prov.keywords = request.POST['keywords']
+                prov.save()
+            elif action =='edit':
+                prov = Proveedor.objects.get(pk=request.POST['id'])
+                prov.nombre = request.POST['nombre']
+                prov.categoria = request.POST['categoria']
+                prov.tel1 = request.POST['tel1']
+                prov.tel2 = request.POST['tel2']
+                prov.mail = request.POST['mail']
+                prov.address = request.POST['address']
+                prov.website = request.POST['website']
+                prov.location = request.POST['location']
+                prov.keywords = request.POST['keywords']
+                prov.save()
             elif action =='delete':
                 prov = Proveedor.objects.get(pk=request.POST['id'])
                 prov.delete()
-            elif action =='search_category_id':
-                data = [{'id': '', 'text': '---------'}]
-                # for i in SubCategoryProv.objects.filter(categoria_id=request.POST['id']):
-                    # data.append({'id': i.id, 'text': i.name, 'data': i.categoria.toJSON()})
             else:
                 data['error'] = 'Ha ocurrido un error'
         except Exception as e:
@@ -172,7 +166,6 @@ class ProveedoresListView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Listado de Proveedores'
-        context['create_url'] = reverse_lazy('prov_create')
         context['list_url'] = reverse_lazy('gestion:proveedor')
         context['entity'] = 'Proveedores'
         context['form'] = proveedorForm()
@@ -430,3 +423,70 @@ class SaleInvoicePdfView(View):
         except:
             pass
         return HttpResponseRedirect(reverse_lazy('SaleListView'))
+
+class PurchaseRegister(CreateView):
+    model = Purchase
+    form_class = PurchaseForm
+    template_name = 'gestion/compra.html'
+    success_url = reverse_lazy('PurchaseRegister')
+    url_redirect = success_url
+    products = Articulo.objects.all()
+    
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        data = {}
+        try:
+            action = request.POST['action']
+            if action == 'articulos':
+                data = []
+                data = ProdServ.objects.get(pk=request.POST['id']).toJSON()
+            if action == 'add':
+                with transaction.atomic():
+                    vents = json.loads(request.POST['vents'])
+                    purch = Purchase()
+                    purch.date_joined = vents['date_joined']
+                    purch.proveedor_id = vents['proveedor']
+                    purch.total = float(vents['total'])
+                    purch.comment = vents['comment']
+                    purch.added = request.user
+                    purch.save()
+
+                    for i in vents['products']:
+                        det = DetPurchase()
+                        det.purch_id = purch.id
+                        det.prod_id = i['id']
+                        det.cant = int(i['cant'])
+                        det.price = float(i['precio'])
+                        det.subtotal = float(i['subtotal'])
+                        det.save()
+                    data = {'id': purch.id}
+            elif action == 'search_proveedor':
+                data = []
+                term = request.POST['term']
+                provee = Proveedor.objects.filter(Q(nombre__icontains=term))[0:10]
+                for i in provee:
+                    item = i.toJSON()
+                    item['text'] = i.nombre
+                    data.append(item)
+            elif action == 'create_proveedor':
+                with transaction.atomic():
+                    frmProveedor = proveedorForm(request.POST)
+                    data = frmProveedor.save()
+            else:
+                data['error'] = 'No ha ingresado a ninguna opción'
+        except Exception as e:
+            data['error'] = str(e)
+        return JsonResponse(data, safe=False)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['articulos'] = self.products.all()
+        context['list_url'] = self.success_url
+        context['action'] = 'add'
+        context['fecha'] = date.today()
+        context['det'] = []
+        context['frmProveedor'] = proveedorForm()
+        return context

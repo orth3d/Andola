@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import BlogListView, ClientsListView, CashRegister, SaleListView, SaleUpdateView, SaleInvoicePdfView, ProveedoresListView
+from .views import BlogListView, ClientsListView, CashRegister, SaleListView, SaleUpdateView, SaleInvoicePdfView, ProveedoresListView, PurchaseRegister
 from accounting.views import DashboardView
 from posts.views import PostCreateView, PostUpdateView, PostDeleteView
 from inventario.views import ProductListView, ServiceListView, ProveedorCreateView, ProveedorUpdateView
@@ -20,4 +20,5 @@ urlpatterns = [
     path('sales/', SaleListView.as_view(), name='SaleListView'),
     path('sales/update/<int:pk>/', SaleUpdateView.as_view(), name='SaleUpdateView'),
     path('sales/invoice/<int:pk>/', SaleInvoicePdfView.as_view(), name='SaleInvoicePDF'),
+    path('salidas/', PurchaseRegister.as_view(), name='PurchaseRegister'),
 ]
