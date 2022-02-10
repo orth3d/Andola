@@ -15,7 +15,7 @@ import json
 from posts.models import Post
 from clients.models import Cliente
 from clients.forms import clientForm
-from inventario.forms import proveedorForm
+from inventario.forms import proveedorForm, ArticuloForm
 from inventario.models import ProdServ, Proveedor, Articulo
 from gestion.models import Sale, DetSale, Purchase, DetPurchase
 from .forms import SaleForm, PurchaseForm
@@ -440,15 +440,12 @@ class PurchaseRegister(CreateView):
         data = {}
         try:
             action = request.POST['action']
-            if action == 'articulos':
-                data = []
-                data = ProdServ.objects.get(pk=request.POST['id']).toJSON()
             if action == 'add':
                 with transaction.atomic():
                     vents = json.loads(request.POST['vents'])
                     purch = Purchase()
                     purch.date_joined = vents['date_joined']
-                    purch.proveedor_id = vents['proveedor']
+                    purch.proveedor_id = vents['provee']
                     purch.total = float(vents['total'])
                     purch.comment = vents['comment']
                     purch.added = request.user
@@ -456,17 +453,33 @@ class PurchaseRegister(CreateView):
 
                     for i in vents['products']:
                         det = DetPurchase()
-                        det.purch_id = purch.id
-                        det.prod_id = i['id']
+                        det.purchase_id = purch.id
+                        det.artic_id = i['id']
                         det.cant = int(i['cant'])
                         det.price = float(i['precio'])
                         det.subtotal = float(i['subtotal'])
                         det.save()
                     data = {'id': purch.id}
+                print(data)
+            elif action == 'search_articulo':
+                data = []
+                term = request.POST['term']
+                articulo = Articulo.objects.filter(Q(nombre__icontains=term))[0:10]
+                print(articulo)
+                for i in articulo:
+                    item = i.toJSON()
+                    item['text'] = i.nombre
+                    data.append(item)
+            elif action == 'create_articulo':
+                with transaction.atomic():
+                    frmArticulo = ArticuloForm(request.POST)
+                    data = frmArticulo.save()
+                    print(data)
             elif action == 'search_proveedor':
                 data = []
                 term = request.POST['term']
                 provee = Proveedor.objects.filter(Q(nombre__icontains=term))[0:10]
+                print(provee)
                 for i in provee:
                     item = i.toJSON()
                     item['text'] = i.nombre
@@ -475,6 +488,7 @@ class PurchaseRegister(CreateView):
                 with transaction.atomic():
                     frmProveedor = proveedorForm(request.POST)
                     data = frmProveedor.save()
+                    print(data)
             else:
                 data['error'] = 'No ha ingresado a ninguna opción'
         except Exception as e:
@@ -489,4 +503,143 @@ class PurchaseRegister(CreateView):
         context['fecha'] = date.today()
         context['det'] = []
         context['frmProveedor'] = proveedorForm()
+        context['frmArticulo'] = ArticuloForm()
+        return context
+
+class PurchaseListView(ListView):
+    model = Purchase
+    template_name = 'gestion/purchase_list.html'
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        data = {}
+        try:
+            action = request.POST['action']
+            if action == 'searchdata':
+                data = []
+                if request.user.is_staff:
+                    for i in Purchase.objects.all():#filter(added__isnull=False):
+                        data.append(i.toJSON())
+                else:
+                    for i in Purchase.objects.filter(date_joined=datetime.now()):
+                        data.append(i.toJSON())
+            elif action == 'search_details_art':
+                data = []
+                for i in DetPurchase.objects.filter(purchase_id=request.POST['id']):
+                   data.append(i.toJSON())
+            elif action =='delete':
+                if request.user.is_staff:
+                    art = Purchase.objects.get(pk=request.POST['id'])
+                    art.delete()
+                else:
+                    data['error'] = 'Solicite autorización para eliminar compra'
+            else:
+                data['error'] = 'Ha ocurrido un error'
+        except Exception as e:
+            data['error'] = str(e)
+        return JsonResponse(data, safe=False)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Listado de Compras'
+        context['create_url'] = reverse_lazy('PurchaseRegister')
+        context['list_url'] = reverse_lazy('PurchaseListView')
+        context['entity'] = 'Compras'
+        return context
+
+class PurchaseUpdateView(UpdateView):
+    model = Purchase
+    form_class = PurchaseForm
+    template_name = 'gestion/compra.html'
+    success_url = reverse_lazy('PurchaseListView')
+    url_redirect = success_url
+    products = Articulo.objects.all()
+    
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        data = {}
+        try:
+            action = request.POST['action']
+            if action == 'edit':
+                with transaction.atomic():
+                    vents = json.loads(request.POST['vents'])
+                    purch = self.get_object()
+                    purch.date_joined = vents['date_joined']
+                    purch.proveedor_id = vents['provee']
+                    purch.total = float(vents['total'])
+                    purch.comment = vents['comment']
+                    purch.added = request.user
+                    purch.save()
+                    purch.detpurchase_set.all().delete()
+
+                    for i in vents['products']:
+                        det = DetPurchase()
+                        det.purchase_id = purch.id
+                        det.artic_id = i['id']
+                        det.cant = int(i['cant'])
+                        det.price = float(i['precio'])
+                        det.subtotal = float(i['subtotal'])
+                        det.save()
+                    data = {'id': purch.id}
+            elif action == 'search_articulo':
+                data = []
+                term = request.POST['term']
+                articulo = Articulo.objects.filter(Q(nombre__icontains=term))[0:10]
+                
+                for i in articulo:
+                    item = i.toJSON()
+                    item['text'] = i.nombre
+                    data.append(item)
+            elif action == 'create_articulo':
+                with transaction.atomic():
+                    frmArticulo = ArticuloForm(request.POST)
+                    data = frmArticulo.save()
+                    print(data)
+            elif action == 'search_proveedor':
+                data = []
+                term = request.POST['term']
+                provee = Proveedor.objects.filter(Q(nombre__icontains=term))[0:10]
+                print(provee)
+                for i in provee:
+                    item = i.toJSON()
+                    item['text'] = i.nombre
+                    data.append(item)
+            elif action == 'create_proveedor':
+                with transaction.atomic():
+                    frmProveedor = proveedorForm(request.POST)
+                    data = frmProveedor.save()
+                    print(data)
+            else:
+                data['error'] = 'No ha ingresado a ninguna opción'
+        except Exception as e:
+            data['error'] = str(e)
+        return JsonResponse(data, safe=False)
+    
+    def get_product_details(self):
+        data = []
+        try:
+            for i in DetPurchase.objects.filter(purchase_id=self.get_object().id):
+                item = i.artic.toJSON()
+                item['cant'] = i.cant
+                data.append(item)
+        except:
+            pass
+        return data
+
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['articulos'] = self.products.all()
+        context['title'] = 'Editar gasto'
+        context['list_url'] = self.success_url
+        context['action'] = 'edit'
+        context['det'] = json.dumps(self.get_product_details())
+        context['frmProveedor'] = proveedorForm()
+        context['frmArticulo'] = ArticuloForm()
         return context

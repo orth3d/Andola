@@ -90,7 +90,7 @@ class Purchase(models.Model):
         item['proveedor'] = self.proveedor.toJSON()
         item['date_joined'] = self.date_joined.strftime('%Y-%m-%d')
         item['total'] = format(self.total, '.2f')
-        item['det'] = [i.toJSON() for i in self.detsale_set.all()]
+        item['det'] = [i.toJSON() for i in self.detpurchase_set.all()]
         item['comment'] = self.comment
         item['added'] = self.added.username
         return item
@@ -109,11 +109,11 @@ class DetPurchase(models.Model):
     subtotal = models.DecimalField(default=0.00, max_digits=9, decimal_places=2)
 
     def __str__(self):
-        return self.prod.nombre
+        return self.artic.nombre
 
     def toJSON(self):
         item = model_to_dict(self, exclude=['sale'])
-        item['prod'] = self.prod.toJSON()
+        item['artic'] = self.artic.toJSON()
         item['price'] = format(self.price, '.2f')
         item['subtotal'] = format(self.subtotal, '.2f')
         return item

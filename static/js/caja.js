@@ -70,6 +70,7 @@ jQuery(function ($) {
     })
 
     var date = moment().format('YYYY-MM-DD');
+    
     if($('input[name="action"]').attr('value') == 'edit'){
                date = $('input[name="date_joined"]').val();
     };

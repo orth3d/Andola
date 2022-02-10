@@ -1,8 +1,8 @@
 from django.urls import path
-from .views import BlogListView, ClientsListView, CashRegister, SaleListView, SaleUpdateView, SaleInvoicePdfView, ProveedoresListView, PurchaseRegister
+from .views import BlogListView, ClientsListView, CashRegister, SaleListView, SaleUpdateView, SaleInvoicePdfView, ProveedoresListView, PurchaseRegister, PurchaseListView, PurchaseUpdateView
 from accounting.views import DashboardView
 from posts.views import PostCreateView, PostUpdateView, PostDeleteView
-from inventario.views import ProductListView, ServiceListView, ProveedorCreateView, ProveedorUpdateView
+from inventario.views import ProductListView, ArticlesListView, ProveedorCreateView, ProveedorUpdateView
 
 urlpatterns = [
     path('', DashboardView.as_view(), name='DashboardView'),
@@ -12,7 +12,7 @@ urlpatterns = [
     path('blog/edit/<int:pk>', PostUpdateView.as_view(), name='post_update'),
     path('blog/delete/<int:pk>', PostDeleteView.as_view(), name='post_delete'),
     path('productos/', ProductListView.as_view(), name='ProductListView'),
-    path('servicios/', ServiceListView.as_view(), name='ServiceListView'),
+    path('articulos/', ArticlesListView.as_view(), name='ArticlesListView'),
     path('proveedores/', ProveedoresListView.as_view(), name='ProveedoresListView'),
     path('proveedores/create/', ProveedorCreateView.as_view(), name='prov_create'),
     path('proveedores/edit/<int:pk>', ProveedorUpdateView.as_view(), name='prov_update'),
@@ -20,5 +20,7 @@ urlpatterns = [
     path('sales/', SaleListView.as_view(), name='SaleListView'),
     path('sales/update/<int:pk>/', SaleUpdateView.as_view(), name='SaleUpdateView'),
     path('sales/invoice/<int:pk>/', SaleInvoicePdfView.as_view(), name='SaleInvoicePDF'),
-    path('salidas/', PurchaseRegister.as_view(), name='PurchaseRegister'),
+    path('pagos/', PurchaseRegister.as_view(), name='PurchaseRegister'),
+    path('pagos/update/<int:pk>/', PurchaseUpdateView.as_view(), name='PurchaseUpdateView'),
+    path('salidas/', PurchaseListView.as_view(), name='PurchaseListView'),
 ]

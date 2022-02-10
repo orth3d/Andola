@@ -9,7 +9,7 @@ from django.db.models import Avg, Sum
 from django.db.models.functions import Coalesce
 from datetime import datetime
 from .forms import ReportForm
-from gestion.models import Sale, DetSale
+from gestion.models import Sale, DetSale, Purchase, DetPurchase
 from gestion.mixins import ValidatePermissionRequiredMixin
 from inventario.models import ProdServ
 # Create your views here.
@@ -67,6 +67,56 @@ class ReportSaleView(ValidatePermissionRequiredMixin, TemplateView):
         context['form'] = ReportForm()
         return context
     
+class ReportPurchaseView(ValidatePermissionRequiredMixin, TemplateView):
+    permission_required = ('gestion.view_Compra')
+    url_redirect = reverse_lazy('PurchaseRegister')
+    template_name= 'accounting/report_purchase.html'
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        data = {}
+        try:
+            action = request.POST['action']
+            if action == 'search_report':
+                data = []
+                start_date = request.POST.get('start_date', '')
+                end_date = request.POST.get('end_date', '')
+                search = Purchase.objects.all()
+                if len(start_date) and len(end_date):
+                    search = search.filter(date_joined__range=[start_date, end_date])
+                for s in search:
+                    data.append([
+                        s.id,
+                        s.proveedor.nombre,
+                        s.date_joined.strftime('%Y-%m-%d'),
+                        format(s.total, '.2f'),
+                        ' ',
+                    ])
+                total = search.aggregate(r=Coalesce(Sum('total'), 0)).get('r')
+
+                data.append([
+                    '---',
+                    '---',
+                    '---',
+                    format(total, '.2f'),
+                    ' ',
+                ])
+            else:
+                data['error'] = 'Ha ocurrido un error'
+        except Exception as e:
+            data['error'] = str(e)
+        return JsonResponse(data, safe=False)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Reporte de Compras y Pagos'
+        context['list_url'] = reverse_lazy('ReportPurchaseView')
+        context['form'] = ReportForm()
+        return context
+
 class DashboardView(TemplateView):
     
     def get_template_names(self):
@@ -85,6 +135,10 @@ class DashboardView(TemplateView):
             action = request.POST['action']
             if action == 'get_graph_sales_year_month':
                 data = self.get_graph_sales_year_month()
+            elif action == 'get_graph_purchase_year_month':
+                data = self.get_graph_purchase_year_month()
+            elif action == 'get_graph_sales_last_year_month':
+                data = self.get_graph_sales_last_year_month()
             elif action == 'get_graph_sales_product_month':
                 data = {
                     'name': 'Porcentaje',
@@ -137,7 +191,46 @@ class DashboardView(TemplateView):
         except:
             pass
         return data
+
+    def get_graph_purchase_year_month(self):
+        data = {'total':[], 'totAnual':[]}
+        try:
+            year = datetime.now().year
+            totalAnual = Purchase.objects.filter(date_joined__year= year).aggregate(r=Coalesce(Sum('total'), 0)).get('r')
+            data['totAnual'] = float(totalAnual)
+            # Ventas por mes
+            for m in range(1, 13):
+                total = Purchase.objects.filter(date_joined__year= year, date_joined__month=m).aggregate(r=Coalesce(Sum('total'), 0)).get('r')
+                data['total'].append(float(total))
+            print(data)
+        except:
+            pass
+        return data
     
+    def get_graph_sales_last_year_month(self):
+        data = {'total':[], 'gasto':[], 'utilidad':[], 'totAnual':[], 'gasAnual':[], 'utiAnual':[]}
+        try:
+            year = datetime.now().year
+            year = year-1
+            totalAnual = Sale.objects.filter(date_joined__year= year).aggregate(r=Coalesce(Sum('total'), 0)).get('r')
+            data['totAnual'] = float(totalAnual)
+            gastoAnual = Sale.objects.filter(date_joined__year= year).aggregate(r=Coalesce(Sum('costo'), 0)).get('r')
+            data['gasAnual'] = float(gastoAnual)
+            utiAnual = totalAnual - gastoAnual
+            data['utiAnual'] = float(utiAnual)
+            # Ventas por mes
+            for m in range(1, 13):
+                total = Sale.objects.filter(date_joined__year= year, date_joined__month=m).aggregate(r=Coalesce(Sum('total'), 0)).get('r')
+                data['total'].append(float(total))
+                gasto = Sale.objects.filter(date_joined__year= year, date_joined__month=m).aggregate(g=Coalesce(Sum('costo'), 0)).get('g')
+                data['gasto'].append(float(gasto))
+                utilidad = total - gasto
+                data['utilidad'].append(float(utilidad))
+
+        except:
+            pass
+        return data
+
     def get_graph_sales_product_month(self):
         data = []
         year = datetime.now().year
@@ -208,5 +301,7 @@ class DashboardView(TemplateView):
         context = super().get_context_data(**kwargs)
         context['panel'] = 'Panel de administrador'
         context['graph_sales_year_month'] = self.get_graph_sales_year_month()
+        context['graph_purchase_year_month'] = self.get_graph_purchase_year_month()
+        context['graph_sales_last_year_month'] = self.get_graph_sales_last_year_month()
         return context
  

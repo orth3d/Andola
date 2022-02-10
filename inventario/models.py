@@ -42,8 +42,9 @@ class Proveedor(models.Model):
     LOCATION_CHOICES = (
         ('N', 'Norte'),
         ('S', 'Sur'),
+        ('C', 'Centro'),
         ('E', 'Oriente'),
-        ('W', 'Poniente'),
+        ('O', 'Poniente'),
     )
     nombre = models.CharField(max_length=100, verbose_name='Nombre', unique=True)
     categoria = models.CharField(max_length=1, choices=CATEGO_CHOICES, verbose_name='Categoria', default='P', unique=False, blank=False)
@@ -79,7 +80,7 @@ class Articulo(models.Model):
         ('S', 'Servicio'),
     )
     nombre = models.CharField(max_length=100, verbose_name='Nombre', unique=True)
-    categoria = models.CharField(max_length=1, choices=CATEGO_CHOICES, default='P')
+    categoria = models.CharField(max_length=1, choices=CATEGO_CHOICES, default='A')
     precio = models.FloatField(default=0)
     descripcion = models.CharField(max_length=150, verbose_name='Descripción', blank=True, unique=False)
     
@@ -88,12 +89,13 @@ class Articulo(models.Model):
 
     def toJSON(self):
         item = model_to_dict(self)
-        item['nombre'] =  self.nombre
-        item['categoria'] = self.categoria
-        item['precio'] =  self.precio
-        item['descripcion'] =  self.descripcion
+        # item['nombre'] =  self.nombre
+        # item['categoria'] = self.categoria
+        # item['precio'] =  self.precio
+        # item['descripcion'] =  self.descripcion
         return item
 
     class Meta:
-        verbose_name = 'Articulo o Servicio'
-        verbose_name_plural = 'Articulos o Servicios'
+        verbose_name = 'Recurso'
+        verbose_name_plural = 'Recursos'
+        ordering = ['id']

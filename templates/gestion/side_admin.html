@@ -42,13 +42,31 @@
               </p>
             </a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item has-treeview">
             {% if user.is_staff %}
-              <a href="{% url 'ReportSaleView' %}" class="nav-link">
+            <a href="#" class="nav-link">
               <i class="nav-icon fas fa-clipboard-list"></i>
               <p>
-                Reportes
+                  Reportes
+                <i class="fas fa-angle-left right"></i>
               </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{% url 'ReportSaleView' %}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Entradas</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{% url 'ReportPurchaseView' %}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Salidas</p>
+                </a>
+              </li>   
+            </ul>
+          </li>
+          <li class="nav-item">
             {% else %}
               <a href="{% url 'SaleListView' %}" class="nav-link">
               <i class="nav-icon fas fa-shopping-cart"></i>
@@ -67,6 +85,15 @@
             </a>
           </li>
           <li class="nav-item">
+            {% if user.is_staff %}
+              <a href="{% url 'PurchaseRegister' %}" class="nav-link">
+              <i class="nav-icon fas fa-cart-plus"></i>
+              <p>
+                Compras
+              </p>
+            </a>
+          </li>  
+          <li class="nav-item">
             <a href="{% url 'BlogListView' %}" class="nav-link">
               <i class="nav-icon fas fa-book"></i>
               <p>
@@ -74,49 +101,23 @@
               </p>
             </a>
           </li>
-          <li class="nav-item has-treeview">
-            <a href="#" class="nav-link">
+          <li class="nav-item">
+            <a href="{% url 'ArticlesListView' %}" class="nav-link">
             <i class="nav-icon fas fa-boxes"></i>
               <p>
                   Inventario
-                <i class="fas fa-angle-left right"></i>
               </p>
             </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="{% url 'ProductListView' %}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Productos</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{% url 'ServiceListView' %}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Servicios</p>
-                </a>
-              </li>   
-            </ul>
           </li>
           <li class="nav-item">
-            {% if user.is_staff %}
               <a href="{% url 'ProveedoresListView' %}" class="nav-link">
               <i class="nav-icon fas fa-address-book"></i>
               <p>
                 Proveedores
               </p>
-            {% endif %}
             </a>
-          </li> 
-          <li class="nav-item">
-            {% if user.is_staff %}
-              <a href="{% url 'PurchaseRegister' %}" class="nav-link">
-              <i class="nav-icon fas fa-cart-plus"></i>
-              <p>
-                Compras
-              </p>
+          </li>
             {% endif %}
-            </a>
-          </li> 
       </nav>
       <!-- /.sidebar-menu -->
     </div>

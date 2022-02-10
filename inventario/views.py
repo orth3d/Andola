@@ -5,8 +5,8 @@ from django.views.generic import TemplateView, ListView, CreateView, UpdateView,
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_protect
 from django.utils.decorators import method_decorator
-from inventario.models import ProdServ, Proveedor #, SubCategoryProv
-from inventario.forms import ProdServForm, proveedorForm
+from inventario.models import ProdServ, Proveedor, Articulo
+from inventario.forms import ProdServForm, proveedorForm, ArticuloForm
 
 # Create your views here.
 class ProductListView(TemplateView):
@@ -62,10 +62,9 @@ class ProductListView(TemplateView):
         context['form'] = ProdServForm()
         return context
 
-class ServiceListView(TemplateView):
-    permission_required = ('clients.view_cliente', 'clients.change_cliente')
-    url_redirect = reverse_lazy('CashRegister')
-    # model = Producto
+class ArticlesListView(TemplateView):
+    # permission_required = ('clients.view_cliente', 'clients.change_cliente')
+    url_redirect = reverse_lazy('PurchaseRegister')
     template_name = 'inventario/services_list.html'
 
     @method_decorator(login_required)
@@ -78,26 +77,24 @@ class ServiceListView(TemplateView):
             action = request.POST['action']
             if action == 'searchdata':
                 data = []
-                for i in ProdServ.objects.filter(categoria='S'):
+                for i in Articulo.objects.filter(categoria='A'):
                     data.append(i.toJSON())
             elif action == 'add':
-                art = ProdServ()
+                art = Articulo()
                 art.nombre = request.POST['nombre']
                 art.categoria = request.POST['categoria']
-                art.thumbnail = request.POST['thumbnail']
                 art.precio = request.POST['precio']
-                art.costo = request.POST['costo']
+                art.descripcion = request.POST['descripcion']
                 art.save()
             elif action == 'edit':
-                art = ProdServ.objects.get(pk=request.POST['id'])
+                art = Articulo.objects.get(pk=request.POST['id'])
                 art.nombre = request.POST['nombre']
                 art.categoria = request.POST['categoria']
-                art.thumbnail = request.POST['thumbnail']
                 art.precio = request.POST['precio']
-                art.costo = request.POST['costo']
+                art.descripcion = request.POST['descripcion']
                 art.save()
             elif action =='delete':
-                art = ProdServ.objects.get(pk=request.POST['id'])
+                art = Articulo.objects.get(pk=request.POST['id'])
                 art.delete()
             else:
                 data['error'] = 'Ha ocurrido un error'
@@ -107,11 +104,10 @@ class ServiceListView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Lista de productos'
-        # context['create_url'] = reverse_lazy('product_create')
-        context['list_url'] = reverse_lazy('ProductListView')
-        context['entity'] = 'Productos'
-        context['form'] = ProdServForm()
+        context['title'] = 'Lista de articulos'
+        context['list_url'] = reverse_lazy('ArticlesListView')
+        context['entity'] = 'Articulos'
+        context['form'] = ArticuloForm()
         return context
 
 class ProveedorCreateView(CreateView):

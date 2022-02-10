@@ -65,6 +65,7 @@ $(function () {
             $('input[name="address"]').val(data.address);
             $('input[name="website"]').val(data.website);
             $('input[name="location"]').val(data.location);
+            $('input[name="keywords"]').val(data.keywords);
             $('#myModalProveedor').modal('show');
     })
         .on('click', 'a[rel="delete"]', function (){

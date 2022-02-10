@@ -2,34 +2,103 @@
 {% load static %}
 {% block content %}
 {% block head %}
-    <script src="{% static "lib/highcharts-8.2.0/highcharts.js" %}"></script>
-    <script src="{% static "lib/highcharts-8.2.0/modules/exporting.js" %}"></script>
-    <script src="{% static "lib/highcharts-8.2.0/modules/export-data.js" %}"></script>
-    <script src="{% static "lib/highcharts-8.2.0/modules/accessibility.js" %}"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    <script src="https://code.highcharts.com/themes/brand-dark.js"></script>
 {% endblock head %}
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-lg-12">
+<br>
+<div class="container-fluid">
+    <div class="row">
+        <figure class="highcharts-figure col-lg-12">
+            <div class="">
             <div id="container"></div>
             </div>
-        </div>
-        <br>
-        <div class="row">
-            <div class="col-lg-12">
-            <div id="container-semi"></div>
-            </div>
-        </div>
-        <br>
-        <div class="row">
-            <div class="col-sm">
-                <div id="container-pieP"></div>
-            </div>
-            <div class="col-sm">
-                <div id="container-pieS"></div>
-            </div>
-        </div>
-        <br>
+        </figure>
     </div>
+    <hr>
+    <div class="row">
+        <div class="card bg-gradient-secondary col-lg-6">
+            <div class="card-header border-0">
+
+                <h3 class="card-title">
+                    <i class="fas fa-chart-bar"></i> Ingresos vs Gastos Totales
+                </h3>
+                <!-- tools card -->
+                <div class="card-tools">
+                  <button type="button" class="btn btn-secondary btn-sm" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                  <button type="button" class="btn btn-secondary btn-sm" data-card-widget="remove">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+                <!-- /. tools -->
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body pt-0">
+                <div id="container-expenses"></div>
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <div class="card bg-gradient-secondary col-lg-6">
+            <div class="card-header border-0">
+              <h3 class="card-title">
+                <i class="fas fa-chart-pie"></i> Balance Anual
+              </h3>
+              <!-- card tools -->
+              <div class="card-tools">
+                <button type="button" class="btn btn-secondary btn-sm" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
+                  <i class="fas fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-secondary btn-sm" data-card-widget="remove">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+              <!-- /.card-tools -->
+            </div>
+            <div class="card-body" style="display: block;">
+                <div id="container-semi"></div>
+            </div>
+    </div>
+    
+        <figure class="highcharts-figure col-lg-12">
+            <div class="">
+            <div id="container-comp"></div>
+            </div>
+        </figure>
+
+    </div><div class="card bg-gradient-secondary">
+        <div class="card-header border-0 ">
+          <h3 class="card-title">
+            <i class="fas fa-chart-pie"></i>
+            Gráficos de Ventas
+          </h3> 
+          <div class="card-tools">
+            <button type="button" class="btn bg-secondary btn-sm" data-card-widget="collapse">
+              <i class="fas fa-minus"></i>
+            </button>
+            <button type="button" class="btn bg-secondary btn-sm" data-card-widget="remove">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+        <div class="card-body"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+            <div class="row">
+                <div class="col-sm">
+                    <div id="container-pieP"></div>
+                </div>
+                <br>
+                <div class="col-sm">
+                    <div id="container-pieS"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
     
     <script type="application/javascript">
         
@@ -62,19 +131,6 @@
                 title: {
                     text: 'Valores en $'
                 }
-            },
-            labels: {
-                items: [{
-                    // html: 'Total Anual',
-                    style: {
-                        left: '50px',
-                        top: '18px',
-                        color: ( // theme
-                            Highcharts.defaultOptions.title.style &&
-                            Highcharts.defaultOptions.title.style.color
-                        ) || 'black'
-                    }
-                }]
             },
         });
 
@@ -189,6 +245,11 @@
                     color: Highcharts.getOptions().colors[1],
                     sliced: true,
                 }, {
+                    name: 'Compras',
+                    y: {{ graph_purchase_year_month.totAnual|safe }},
+                    color: Highcharts.getOptions().colors[6],
+                    sliced: true,
+                },{
                     name: 'Utilidad',
                     y: {{ graph_sales_year_month.utiAnual|safe }},
                     color: Highcharts.getOptions().colors[2],
@@ -197,6 +258,137 @@
           }]
         });
 
+        var graphcolumncomp = Highcharts.chart('container-comp', {
+            chart: {
+              type: 'column'
+            },
+            title: {
+              text: 'Comparativo mensual 2021 vs 2022'
+            },
+            xAxis: {
+              categories: [
+                    'Ene',
+                    'Feb',
+                    'Mar',
+                    'Abr',
+                    'May',
+                    'Jun',
+                    'Jul',
+                    'Ago',
+                    'Sep',
+                    'Oct',
+                    'Nov',
+                    'Dic'
+                ],
+            },
+            yAxis: {
+              min: 0,
+              title: {
+                text: 'Ingresos en $'
+              }
+            },
+            legend: {
+              shadow: false
+            },
+            tooltip: {
+              shared: true
+            },
+            plotOptions: {
+              column: {
+                grouping: false,
+                shadow: false,
+                borderWidth: 0
+              }
+            },
+        });
+
+        var graphexpenses = Highcharts.chart('container-expenses', {
+            chart: {
+              type: 'area'
+            },
+            title: {
+              text: 'Presupuesto de Gastos vs Salidas Reales'
+            },
+            xAxis: {
+              categories: [
+                    'Ene',
+                    'Feb',
+                    'Mar',
+                    'Abr',
+                    'May',
+                    'Jun',
+                    'Jul',
+                    'Ago',
+                    'Sep',
+                    'Oct',
+                    'Nov',
+                    'Dic'
+                ],
+            },
+            yAxis: {
+              min: 0,
+              title: {
+                text: 'Cantidades en $'
+              }
+            },
+            legend: {
+              shadow: false
+            },
+            tooltip: {
+              shared: true
+            },
+            plotOptions: {
+              column: {
+                grouping: false,
+                shadow: false,
+                borderWidth: 0
+              }
+            },
+        });
+
+        function get_graph_sales_last_year_month() {
+            $.ajax({
+                url: window.location.pathname,
+                type: 'POST',
+                data: {
+                    'action': 'get_graph_sales_last_year_month'
+                },
+                dataType: 'json',
+            }).done(function (data) {
+                if(!data.hasOwnProperty('error')) {
+                    graphcolumncomp.addSeries({
+                        name: 'Ingresos 2021',
+                        color: 'rgba(165,170,217,0.5)',
+                        data: {{ graph_sales_last_year_month.total|safe }},
+                        pointPadding: 0.3,
+                        pointPlacement: -0.2
+                    });
+                    graphcolumncomp.addSeries({
+                        type: 'column',
+                        name: 'Gastos 2021',
+                        color: 'rgba(248,161,63,0.5)',
+                        pointPadding: 0.3,
+                        pointPlacement: 0.2,
+                        data: {{ graph_sales_last_year_month.gasto|safe }},
+                    });
+                    graphcolumncomp.addSeries({
+                        type: 'spline',
+                        name: 'Utilidad 2021',
+                        color: 'rgb(154, 180, 66, 0.5)',
+                        pointPadding: 0.3,
+                        pointPlacement: 0,
+                        data: {{ graph_sales_last_year_month.utilidad|safe }}
+                    });
+                    return false;
+                }
+                message_error(data.error);
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                alert(textStatus + ': ' + errorThrown);
+            }).always(function(data) {
+            
+            });
+        }
+        
         function get_graph_sales_year_month() {
             $.ajax({
                 url: window.location.pathname,
@@ -212,20 +404,43 @@
                         name: 'Ingresos',
                         data: {{ graph_sales_year_month.total|safe }}
                     });
+                    graphcolumncomp.addSeries({
+                        name: 'Ingresos 2022',
+                        color: 'rgba(126,86,134,.9)',
+                        pointPadding: 0.4,
+                        pointPlacement: -0.2,
+                        data: {{ graph_sales_year_month.total|safe }}
+                    });
                     graphcolumn.addSeries({
                         type: 'column',
                         name: 'Gastos',
                         data: {{ graph_sales_year_month.gasto|safe }}
                     });
+                    graphexpenses.addSeries({
+                        type: 'area',
+                        name: 'Gastos',
+                        color: Highcharts.getOptions().colors[1],
+                        data: {{ graph_sales_year_month.gasto|safe }}
+                    });
+                    graphcolumncomp.addSeries({
+                        name: 'Gastos 2022',
+                        color: 'rgba(186,60,61,.9)',
+                        pointPadding: 0.4,
+                        pointPlacement: 0.2,
+                        data: {{ graph_sales_year_month.gasto|safe }}
+                    });
                     graphcolumn.addSeries({
                         type: 'spline',
                         name: 'Utilidad',
-                        data: {{ graph_sales_year_month.utilidad|safe }},
-                        marker: {
-                            lineWidth: 2,
-                            lineColor: Highcharts.getOptions().colors[2],
-                            fillColor: 'white'
-                        }
+                        data: {{ graph_sales_year_month.utilidad|safe }}
+                    });
+                    graphcolumncomp.addSeries({
+                        type: 'spline',
+                        name: 'Utilidad 2022',
+                        color: 'rgb(15, 182, 204, 0.9)',
+                        pointPadding: 0.4,
+                        pointPlacement: 0,
+                        data: {{ graph_sales_year_month.utilidad|safe }}
                     });
                     return false;
                 }
@@ -280,11 +495,39 @@
             
             });
         }
+        
+        function get_graph_purchase_year_month() {
+            $.ajax({
+                url: window.location.pathname,
+                type: 'POST',
+                data: {
+                    'action': 'get_graph_purchase_year_month'
+                },
+                dataType: 'json',
+            }).done(function (data) {
+                if(!data.hasOwnProperty('error')) {
+                    graphexpenses.addSeries({
+                        type: 'area',
+                        name: 'Compras',
+                        color: Highcharts.getOptions().colors[6],
+                        data: {{ graph_purchase_year_month.total|safe }}
+                    });
+                    return false;
+                }
+                message_error(data.error);
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                alert(textStatus + ': ' + errorThrown);
+            }).always(function(data) {
+            
+            });
+        }
 
         $(function (){
             get_graph_sales_year_month();
             get_graph_sales_product_year();
             get_graph_sales_service_year();
+            get_graph_sales_last_year_month();
+            get_graph_purchase_year_month();
         })
     </script>
 

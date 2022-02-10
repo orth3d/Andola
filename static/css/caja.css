@@ -85,6 +85,9 @@ a {
     text-align: center;
 }
 
+h3.card-title{
+    color:#ffffff;
+}
 
 div.ocultar {
     display: none;
@@ -146,11 +149,25 @@ div.form-cliente-caja {
     margin-left: 2px;
     padding: 0 5px 0 5px;*/
 }
+.form-group label {
+    display: block;
+    font-size: medium;
+}
 
 .input-group {
     margin: 5px auto 5px auto;
     padding: 0;
     text-align: center;
+}
+
+.datos-compras {
+    font-size: 0.9rem;
+}
+.datos-compras label {
+    color: gray;
+}
+.datos-compras table {
+    font-size: 0.9rem;
 }
 
 .datos-cliente .boton,
@@ -294,4 +311,21 @@ div.datos-prodyserv nav a.activo {
 .boton-peligro:hover {
     color: white;
     background-color: #b31a29;
+}
+
+.tblartcl td {
+    padding-top: 0%;
+    padding-bottom: 0%;
+    vertical-align: middle;
+}
+
+input[name="cant"]{
+    height: 50% !important;
+}
+.tblartcl .btn-secondary{
+    height: 60% !important;
+}
+
+.tblartcl .input-group {
+    width: 100% !important;
 }
