@@ -66,7 +66,8 @@ jQuery(function ($) {
                 data: function(params) {
                     var queryParameters = {
                         term: params.term,
-                        action: 'search_articulo'
+                        action: 'search_articulo',
+                        ids: JSON.stringify(vents.get_ids()) //vents.get_ids() 
                     }
                     return queryParameters;
                 },

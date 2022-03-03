@@ -271,7 +271,7 @@ class DashboardView(TemplateView):
         try:
             for p in ProdServ.objects.filter(categoria='P'):
                 total = DetSale.objects.filter(sale__date_joined__year= year, prod_id=p.id).aggregate(
-                    r=Coalesce(Sum('subtotal'), 0)).get('r')
+                    r=Coalesce(Sum('cant'), 0)).get('r')
                 if total > 0:
                     data.append({
                         'name': p.nombre,
@@ -287,7 +287,7 @@ class DashboardView(TemplateView):
         try:
             for p in ProdServ.objects.filter(categoria='S'):
                 total = DetSale.objects.filter(sale__date_joined__year= year, prod_id=p.id).aggregate(
-                    r=Coalesce(Sum('subtotal'), 0)).get('r')
+                    r=Coalesce(Sum('cant'), 0)).get('r')
                 if total > 0:
                     data.append({
                         'name': p.nombre,

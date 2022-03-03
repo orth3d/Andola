@@ -20,7 +20,7 @@ function getData() {
             {"data": "thumbnail"},
             {"data": "nombre"},
             {"data": "precio"},
-            {"data": "cantidad_almacen"},
+            {"data": "stock"},
             {"data": "opciones"},
         ],
         columnDefs: [
@@ -53,6 +53,17 @@ function getData() {
                     return price;
                 }
             },
+            {
+                targets: [-2],
+                class: 'text-center',
+                orderable: false,
+                render: function (data, type, row) {
+                    if(data > 0){
+                        return '<span class="badge badge-success">'+data+'</span>'
+                    }
+                    return '<span class="badge badge-danger">'+data+'</span>'
+                }
+            },
         ],
         initComplete: function(settings, json) {
             //alert('Tabla cargada');
@@ -82,7 +93,7 @@ $(function () {
             $('select[name="thumbnail"]').val(data.thumbnail);
             $('input[name="precio"]').val(data.precio);
             $('input[name="costo"]').val(data.costo);
-            $('input[name="cantidad_almacen"]').val(data.cantidad_almacen);
+            $('input[name="stock"]').val(data.stock);
             $('#myModalProduct').modal('show');            
     })
         .on('click', 'a[rel="delete"]', function (){
@@ -102,17 +113,13 @@ $(function () {
             var tr = tableProduct.cell($(this).closest('td, li')).index();
             var data = tableProduct.row(tr.row).data(); // obtener todos los datos del registro
             Swal.fire({
-                title: 'Producto',
+                title: data.nombre,
                 html: '<img src="' + data.thumbnail + '" alt="..." height="100px"></img>' +
                 '<table class="table table-sm text-left">' +
                 '<tbody>' +
                   '<tr>' +
                     '<th scope="row">ID</th>' + 
                     '<td>' + data.id + '</td>' +
-                  '</tr>' +
-                  '<tr>' +
-                    '<th scope="row">Nombre</th>' + 
-                    '<td>' + data.nombre + '</td>' +
                   '</tr>' +
                   '<tr>' +
                     '<th scope="row">Categoria</th>' + 
@@ -128,7 +135,7 @@ $(function () {
                   '</tr>' +
                   '<tr>' +
                     '<th scope="row">Cantidad en almacén</th>' + 
-                    '<td>' + data.cantidad_almacen + '</td>' +
+                    '<td>' + data.stock + '</td>' +
                   '</tr>' +
                 '</tbody>' +
               '</table>'
@@ -138,6 +145,7 @@ $(function () {
     $('form').on('submit', function(e) {
         e.preventDefault();
         var parameters = new FormData(this);
+        console.log(parameters);
         submitWithAjax(window.location.pathname, 'Guardar', '¿Estás seguro de querer guardar este producto?', parameters, function() {
             $('#myModalProduct').modal('hide');
             tableProduct.ajax.reload();//getData();

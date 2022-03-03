@@ -14,7 +14,7 @@ class ProdServ(models.Model):
     thumbnail = models.FileField(verbose_name='Imagen')
     precio = models.FloatField(default=0)
     costo = models.FloatField(default=0, verbose_name='Costo Unitario')
-    cantidad_almacen = models.IntegerField(default=0)
+    stock = models.IntegerField(default=0)
     
     def __str__(self):
         return self.nombre
@@ -26,7 +26,7 @@ class ProdServ(models.Model):
         item['thumbnail'] = '{}{}'.format(MEDIA_URL, self.thumbnail)
         item['precio'] =  self.precio
         item['costo'] =  self.costo
-        item['cantidad_almacen'] =  self.cantidad_almacen
+        item['stock'] =  self.stock
         return item
 
     class Meta:
@@ -78,11 +78,13 @@ class Articulo(models.Model):
     CATEGO_CHOICES = (
         ('A', 'Articulo'),
         ('S', 'Servicio'),
+        ('R', 'Recurso'),
     )
     nombre = models.CharField(max_length=100, verbose_name='Nombre', unique=True)
     categoria = models.CharField(max_length=1, choices=CATEGO_CHOICES, default='A')
     precio = models.FloatField(default=0)
     descripcion = models.CharField(max_length=150, verbose_name='Descripción', blank=True, unique=False)
+    stock = models.IntegerField(default=0, verbose_name='Stock')
     
     def __str__(self):
         return self.nombre

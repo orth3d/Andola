@@ -142,14 +142,14 @@
                 type: 'pie'
             },
             title: {
-                text: '% Productos vendidos este año'
+                text: 'Productos vendidos este año'
             },
             tooltip: {
                 pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
             },
             accessibility: {
                 point: {
-                    valueSuffix: '%'
+                    valueSuffix: ''
                 }
             },
             plotOptions: {
@@ -158,7 +158,7 @@
                     cursor: 'pointer',
                     dataLabels: {
                         enabled: true,
-                        format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                        format: '<b>{point.name}</b>: {point.y:.0f}'
                     }
                 }
             },
@@ -172,14 +172,14 @@
                 type: 'pie'
             },
             title: {
-                text: '% Servicios vendidos este año'
+                text: 'Servicios vendidos este año'
             },
             tooltip: {
                 pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
             },
             accessibility: {
                 point: {
-                    valueSuffix: '%'
+                    valueSuffix: ''
                 }
             },
             plotOptions: {
@@ -188,7 +188,7 @@
                     cursor: 'pointer',
                     dataLabels: {
                         enabled: true,
-                        format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                        format: '<b>{point.name}</b>: {point.y:.0f}'
                     }
                 }
             },

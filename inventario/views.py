@@ -33,16 +33,16 @@ class ProductListView(TemplateView):
                 art.thumbnail = request.POST['thumbnail']
                 art.precio = request.POST['precio']
                 art.costo = request.POST['costo']
-                art.cantidad_almacen = request.POST['cantidad_almacen']
+                art.stock = request.POST['stock']
                 art.save()
             elif action == 'edit':
                 art = ProdServ.objects.get(pk=request.POST['id'])
                 art.nombre = request.POST['nombre']
                 art.categoria = request.POST['categoria']
-                art.thumbnail = request.POST['thumbnail']
+                # art.thumbnail = request.POST['thumbnail']
                 art.precio = request.POST['precio']
                 art.costo = request.POST['costo']
-                art.cantidad_almacen = request.POST['cantidad_almacen']
+                art.stock = request.POST['stock']
                 art.save()
             elif action =='delete':
                 art = ProdServ.objects.get(pk=request.POST['id'])
@@ -85,6 +85,7 @@ class ArticlesListView(TemplateView):
                 art.categoria = request.POST['categoria']
                 art.precio = request.POST['precio']
                 art.descripcion = request.POST['descripcion']
+                art.stock = request.POST['stock']
                 art.save()
             elif action == 'edit':
                 art = Articulo.objects.get(pk=request.POST['id'])
@@ -92,6 +93,7 @@ class ArticlesListView(TemplateView):
                 art.categoria = request.POST['categoria']
                 art.precio = request.POST['precio']
                 art.descripcion = request.POST['descripcion']
+                art.stock = request.POST['stock']
                 art.save()
             elif action =='delete':
                 art = Articulo.objects.get(pk=request.POST['id'])

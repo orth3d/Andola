@@ -1,5 +1,6 @@
 # import json
 # from itertools import chain
+from ast import Delete
 from django.db import models
 from django.forms import model_to_dict
 from clients.models import Cliente
@@ -7,23 +8,6 @@ from datetime import datetime
 from inventario.models import ProdServ, Proveedor, Articulo
 from django.contrib.auth.models import User
 
-# class PrintableModel(models.Model):
-#     def __repr__(self):
-#         return str(self.to_dict())
-
-#     def to_dict(self):
-#         opts = self._meta
-#         data = {}
-#         for f in chain(opts.concrete_fields, opts.private_fields):
-#             data[f.name] = f.value_from_object(self)
-#         for f in opts.many_to_many:
-#             data[f.name] = [i.id for i in f.value_from_object(self)]
-#         return data
-
-#     class Meta:
-#         abstract = True
-
-# Create your models here.
 class Sale(models.Model):
     cli = models.ForeignKey(Cliente, on_delete=models.CASCADE)
     date_joined = models.DateField(default=datetime.now)
@@ -45,6 +29,12 @@ class Sale(models.Model):
         item['comment'] = self.comment
         item['added'] = self.added.username
         return item
+
+    def delete(self, using=None, keep_parents=False):
+        for det in self.detsale_set.all():
+            det.prod.stock += det.cant
+            det.prod.save()
+        super(Sale, self).delete()
 
     class Meta:
         verbose_name = 'Venta'
@@ -94,6 +84,12 @@ class Purchase(models.Model):
         item['comment'] = self.comment
         item['added'] = self.added.username
         return item
+
+    def delete(self, using=None, keep_parents=False):
+        for det in self.detpurchase_set.all():
+            det.artic.stock -= det.cant
+            det.artic.save()
+        super(Purchase, self).delete()
 
     class Meta:
         verbose_name = 'Compra'

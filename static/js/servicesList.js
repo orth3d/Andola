@@ -6,6 +6,7 @@ function getData() {
         autoWidth: false,
         destroy: true,
         deferRender: true,
+        pageLength: 25,
         ajax: {
             url: window.location.pathname,
             type: 'POST',
@@ -19,6 +20,7 @@ function getData() {
             {"data": "nombre"},
             {"data": "precio"},
             {"data": "descripcion"},
+            {"data": "stock"},
             {"data": "opciones"},
         ],
         columnDefs: [
@@ -31,6 +33,17 @@ function getData() {
                     buttons += '<a href="#" rel="edit" class="btn-warning btn-xs"><i class="far fa-edit"></i></a> ';
                     buttons += '<a href="#" rel="delete" class="btn-danger btn-xs"><i class="far fa-trash-alt"></i></button>';
                     return buttons;
+                }
+            },
+            {
+                targets: [-2],
+                class: 'text-center',
+                orderable: false,
+                render: function (data, type, row) {
+                    if(data > 0){
+                        return '<span class="badge badge-success">'+data+'</span>'
+                    }
+                    return '<span class="badge badge-danger">'+data+'</span>'
                 }
             },
         ],
@@ -60,6 +73,7 @@ $(function () {
             $('input[name="nombre"]').val(data.nombre);
             $('input[name="precio"]').val(data.precio);
             $('input[name="descripcion"]').val(data.descripcion);
+            $('input[name="stock"]').val(data.stock);
             $('#myModalArticle').modal('show');            
     })
         .on('click', 'a[rel="delete"]', function (){
@@ -98,6 +112,10 @@ $(function () {
                   '<tr>' +
                     '<th scope="row">Descripción</th>' + 
                     '<td>' + data.descripcion + '</td>' +
+                  '</tr>' +
+                  '<tr>' +
+                    '<th scope="row">Stock</th>' + 
+                    '<td>' + data.stock + '</td>' +
                   '</tr>' +
                 '</tbody>' +
               '</table>'

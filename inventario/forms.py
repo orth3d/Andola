@@ -7,7 +7,7 @@ class ProdServForm(forms.ModelForm):
 
     class Meta:
         model = ProdServ
-        fields = ('nombre', 'categoria', 'thumbnail', 'precio', 'costo', 'cantidad_almacen')
+        fields = ('nombre', 'categoria', 'precio', 'costo', 'stock')
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -53,7 +53,6 @@ class proveedorForm(forms.ModelForm):
         except Exception as e:
             data['error'] = str(e)
         return data
-
 
 class ArticuloForm(forms.ModelForm):
 

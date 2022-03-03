@@ -213,6 +213,8 @@ class CashRegister(CreateView):
                         det.price = float(i['precio'])
                         det.subtotal = float(i['subtotal'])
                         det.save()
+                        det.prod.stock -= det.cant
+                        det.prod.save()
                     data = {'id': sale.id}
             elif action == 'search_clients':
                 data = []
@@ -234,7 +236,7 @@ class CashRegister(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['productos'] = self.products.filter(categoria='P')
+        context['productos'] = self.products.filter(categoria='P', stock__gt=0)
         context['servicios'] = self.products.filter(categoria='S')
         context['list_url'] = self.success_url
         context['action'] = 'add'
@@ -329,6 +331,8 @@ class SaleUpdateView(UpdateView):
                         det.price = float(i['precio'])
                         det.subtotal = float(i['subtotal'])
                         det.save()
+                        det.prod.stock -= det.cant
+                        det.prod.save()
                     data = {'id': sale.id}
             elif action == 'search_clients':
                 data = []
@@ -459,14 +463,16 @@ class PurchaseRegister(CreateView):
                         det.price = float(i['precio'])
                         det.subtotal = float(i['subtotal'])
                         det.save()
+                        det.artic.stock += det.cant
+                        det.artic.save()
                     data = {'id': purch.id}
                 print(data)
             elif action == 'search_articulo':
                 data = []
+                ids_exclude = json.loads(request.POST['ids'])
                 term = request.POST['term']
-                articulo = Articulo.objects.filter(Q(nombre__icontains=term))[0:10]
-                print(articulo)
-                for i in articulo:
+                articulo = Articulo.objects.filter(Q(nombre__icontains=term))
+                for i in articulo.exclude(id__in=ids_exclude)[0:10]:
                     item = i.toJSON()
                     item['text'] = i.nombre
                     data.append(item)
@@ -585,14 +591,16 @@ class PurchaseUpdateView(UpdateView):
                         det.cant = int(i['cant'])
                         det.price = float(i['precio'])
                         det.subtotal = float(i['subtotal'])
+                        det.artic.stock += det.cant
+                        det.artic.save()
                         det.save()
                     data = {'id': purch.id}
             elif action == 'search_articulo':
                 data = []
+                ids_exclude = json.loads(request.POST['ids'])
                 term = request.POST['term']
-                articulo = Articulo.objects.filter(Q(nombre__icontains=term))[0:10]
-                
-                for i in articulo:
+                articulo = Articulo.objects.filter(Q(nombre__icontains=term))
+                for i in articulo.exclude(id__in=ids_exclude)[0:10]:
                     item = i.toJSON()
                     item['text'] = i.nombre
                     data.append(item)

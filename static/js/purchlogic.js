@@ -7,6 +7,13 @@ var vents = {
         products: [],
         comment: ''
     },
+    get_ids: function () {
+        var ids = [];
+        $.each(this.items.products, function(key,value){
+            ids.push(value.id);
+        });
+        return ids;
+    },
     calculate_invoice: function() {
         var total = 0.00;
         $.each(this.items.products, function (pos, dict) {
@@ -84,6 +91,7 @@ var vents = {
 
             }
         });
+        console.log(this.get_ids());
     },
 };
 
