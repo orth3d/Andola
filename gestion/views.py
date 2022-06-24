@@ -1,3 +1,4 @@
+from unicodedata import name
 from django.db import transaction
 from django.db.models import Count, Q
 # from django.shortcuts import render
@@ -25,6 +26,9 @@ from django.template.loader import get_template
 from xhtml2pdf import pisa
 from django.contrib.staticfiles import finders
 from django.contrib import messages
+
+from django.db.models import Value as V
+from django.db.models.functions import Concat
 
 
 def calculate_age(fecha_nacimiento):
@@ -219,7 +223,9 @@ class CashRegister(CreateView):
             elif action == 'search_clients':
                 data = []
                 term = request.POST['term']
-                clies = Cliente.objects.filter(Q(nombre__icontains=term) | Q(apellido__icontains=term))[0:10]
+                #clies = Cliente.objects.filter(Q(nombre__icontains=term) | Q(apellido__icontains=term))[0:10]
+                clies = Cliente.objects.annotate(full_name=Concat('nombre', V(' '), 'apellido')).\
+                    filter(full_name__icontains=term)[0:20]
                 for i in clies:
                     item = i.toJSON()
                     item['text'] = i.get_full_name()
@@ -236,8 +242,8 @@ class CashRegister(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['productos'] = self.products.filter(categoria='P', stock__gt=0)
-        context['servicios'] = self.products.filter(categoria='S')
+        context['productos'] = self.products.filter(categoria='P', stock__gt=0).order_by('nombre')
+        context['servicios'] = self.products.filter(categoria='S').order_by('nombre')
         context['list_url'] = self.success_url
         context['action'] = 'add'
         context['fecha'] = date.today()
