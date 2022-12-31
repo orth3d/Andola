@@ -1,3 +1,4 @@
+from unicodedata import name
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView
@@ -5,13 +6,14 @@ from django.http import JsonResponse, HttpResponseRedirect, HttpResponse, HttpRe
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.db.models import Avg, Sum
+from django.db.models import Avg, Sum, Q
 from django.db.models.functions import Coalesce
 from datetime import datetime
 from .forms import ReportForm
 from gestion.models import Sale, DetSale, Purchase, DetPurchase
 from gestion.mixins import ValidatePermissionRequiredMixin
 from inventario.models import ProdServ
+import json
 # Create your views here.
 
 class ReportSaleView(ValidatePermissionRequiredMixin, TemplateView):
@@ -31,14 +33,18 @@ class ReportSaleView(ValidatePermissionRequiredMixin, TemplateView):
                 data = []
                 start_date = request.POST.get('start_date', '')
                 end_date = request.POST.get('end_date', '')
+                terapeuta = request.POST.get('terapeuta', '')
                 search = Sale.objects.all()
                 if len(start_date) and len(end_date):
                     search = search.filter(date_joined__range=[start_date, end_date])
+                    if len(terapeuta):
+                        search = search.filter(added=terapeuta)
                 for s in search:
                     data.append([
                         s.id,
                         s.cli.nombre + ' ' + s.cli.apellido,
                         s.date_joined.strftime('%Y-%m-%d'),
+                        s.added.username,
                         format(s.total, '.2f'),
                         format(s.costo, '.2f'),
                         ' ',
@@ -47,6 +53,7 @@ class ReportSaleView(ValidatePermissionRequiredMixin, TemplateView):
                 costo = search.aggregate(t=Coalesce(Sum('costo'), 0)).get('t')
 
                 data.append([
+                    '---',
                     '---',
                     '---',
                     '---',

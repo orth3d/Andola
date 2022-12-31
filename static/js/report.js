@@ -1,19 +1,22 @@
 var date_range = null;
 var date_now = new moment().format('YYYY-MM-DD');
+var terapeuta = '';
+var parameters = {
+    'action': 'search_report',
+    'start_date': date_now,
+    'end_date': date_now,
+    'terapeuta': terapeuta,
+};
 
 function generate_report() {
     
-    var parameters = {
-        'action': 'search_report',
-        'start_date': date_now,
-        'end_date': date_now,
-    };
 
     if(date_range !== null ){
         parameters['start_date'] = date_range.startDate.format('YYYY-MM-DD');
         parameters['end_date'] = date_range.endDate.format('YYYY-MM-DD');
+        parameters['terapeuta'] = terapeuta;
     }
-
+    console.log(parameters);
     $('#data').DataTable({
         responsive: true,
         autoWidth: false,
@@ -71,7 +74,7 @@ function generate_report() {
                             alignment: 'center'
                         }
                     };
-                    doc.content[1].table.widths = ['10%','35%','15%','20%','20%','0%'];
+                    doc.content[1].table.widths = ['10%','35%','15%','15%','15%','15%','0%'];
                     doc.content[1].margin = [0, 35, 0, 0];
                     doc.content[1].layout = {};
                     doc['footer'] = (function (page, pages) {
@@ -102,27 +105,6 @@ function generate_report() {
                     return '$' + parseFloat(data).toFixed(2);
                 }
             },
-            // {
-            //     targets: [-1],
-            //     class: 'text-center',
-            //     orderable: false,
-            //     render: function (data, type, row) {
-            //         var buttons = '<a href="#" rel="details" class="btn-secondary btn-xs"><i class="far fa-eye"></i></a> ';
-            //         buttons += '<a href="/gest/sales/update/' + row.id + '/" class="btn-warning btn-xs"><i class="fas fa-edit"></i></a> ';
-            //         buttons += '<a href="/gest/sales/invoice/' + row.id + '/" target="_blank" class="btn-info btn-xs"><i class="fas fa-file-pdf"></i></a> ';
-            //         buttons += '<a href="#" rel="delete" class="btn-danger btn-xs"><i class="fas fa-trash-alt"></i></a> ';
-            //         return buttons;
-            //     }
-            // },
-            // {
-            //     targets: [1],
-            //     class: 'text-center',
-            //     orderable: false,
-            //     render: function (data, type, row) {
-            //         var n = data.nombre + ' ' + data.apellido;
-            //         return n;
-            //     }
-            // },
         ],
         initComplete: function (settings, json) {
 
@@ -138,6 +120,10 @@ $(function () {
         $(this).data('daterangepicker').setStartDate(date_now);
         $(this).data('daterangepicker').setEndDate(date_now);
         date_range = picker;
+        // generate_report();
+    });
+    $('select[name="terapeuta"]').change(function(){
+        parameters.terapeuta = $("option:selected").val();
         generate_report();
     });
     generate_report();

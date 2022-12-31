@@ -150,7 +150,7 @@ $(function(){
         vents.items.date_joined = $('input[name="date_joined"]').val();
         vents.items.comment = $('input[name="comment"]').val();
         vents.items.cli = $('select[name="cli"]').val();
-        console.log(vents.items.cli);
+        vents.items.added = $('select[name="added"] option:selected').val();
         var parameters = new FormData();
         parameters.append('action', $('input[name="action"]').val());
         parameters.append('vents', JSON.stringify(vents.items));

@@ -51,6 +51,10 @@
                         <label for="">Rango de Fechas:</label>
                         {{ form.date_range }}
                     </div>
+                    <div class="col-lg-4">
+                        <label for="">Terapeuta:</label>
+                        {{ form.terapeuta }}
+                    </div>
                 </div>
                 <div>
                 <hr>
@@ -59,9 +63,10 @@
                     {% block columns %}
                         <th scope="col" style="width: 10%;">Nro</th>
                         <th scope="col" style="width: 30%;">Cliente</th>
-                        <th scope="col" style="width: 20%;">Fecha de registro</th>
-                        <th scope="col" style="width: 20%;">Total</th>
-                        <th scope="col" style="width: 20%;">Costo</th>
+                        <th scope="col" style="width: 15%;">Fecha de registro</th>
+                        <th scope="col" style="width: 15%;">Terapeuta</th>
+                        <th scope="col" style="width: 15%;">Total</th>
+                        <th scope="col" style="width: 15%;">Costo</th>
                         <th></th>
                       <!-- columnas -->
                     {% endblock columns %}
@@ -87,6 +92,11 @@
             <!-- /.card -->
           </div>
         </div>
+        <script>
+          $(function() {
+
+          })
+        </script>
       </div>
     </section>
     <!-- /.content -->

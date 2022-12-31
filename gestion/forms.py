@@ -3,6 +3,7 @@ from inventario.models import ProdServ
 from .models import Purchase, Sale
 from clients.models import Cliente
 from datetime import datetime
+from django.contrib.auth.models import User
 
 
 class SaleForm(ModelForm):
@@ -37,6 +38,9 @@ class SaleForm(ModelForm):
             'comment' : TextInput(attrs={
                 'class': 'form-control',
                 'autocomplete': 'off'
+            }),
+            'added' : Select(attrs= {
+                'class': 'form-control'
             })
         }
 

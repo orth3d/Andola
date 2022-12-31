@@ -27,7 +27,7 @@ class Sale(models.Model):
         item['date_joined'] = self.date_joined.strftime('%Y-%m-%d')
         item['det'] = [i.toJSON() for i in self.detsale_set.all()]
         item['comment'] = self.comment
-        item['added'] = self.added.username
+        item['added'] = self.added.id
         return item
 
     def delete(self, using=None, keep_parents=False):
