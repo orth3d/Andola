@@ -47,11 +47,12 @@ class ReportSaleView(ValidatePermissionRequiredMixin, TemplateView):
                         s.added.username,
                         format(s.total, '.2f'),
                         format(s.costo, '.2f'),
+                        format(s.total-s.costo, '.2f'),
                         ' ',
                     ])
                 total = search.aggregate(r=Coalesce(Sum('total'), 0)).get('r')
                 costo = search.aggregate(t=Coalesce(Sum('costo'), 0)).get('t')
-
+                utilidad = total-costo
                 data.append([
                     '---',
                     '---',
@@ -59,6 +60,7 @@ class ReportSaleView(ValidatePermissionRequiredMixin, TemplateView):
                     '---',
                     format(total, '.2f'),
                     format(costo, '.2f'),
+                    format(utilidad, '.2f'),
                     ' ',
                 ])
             else:

@@ -26,7 +26,7 @@ from django.template.loader import get_template
 from xhtml2pdf import pisa
 from django.contrib.staticfiles import finders
 from django.contrib import messages
-
+from django.core.serializers import serialize 
 from django.db.models import Value as V
 from django.db.models.functions import Concat
 
@@ -265,12 +265,12 @@ class SaleListView(ListView):
             action = request.POST['action']
             if action == 'searchdata':
                 data = []
-                # if request.user.is_staff:
-                    # for i in Sale.objects.all():#filter(added__isnull=False):
-                        # data.append(i.toJSON())
-                # else:
-                for i in Sale.objects.filter(date_joined=datetime.now()):
-                    data.append(i.toJSON())
+                if request.user.is_staff:
+                    for i in Sale.objects.order_by('-id')[:200]:#filter(added__isnull=False):
+                        data.append(i.toJSON())
+                else:
+                    for i in Sale.objects.filter(date_joined=datetime.now()):
+                        data.append(i.toJSON())
             elif action == 'search_details_prod':
                 data = []
                 for i in DetSale.objects.filter(sale_id=request.POST['id']):

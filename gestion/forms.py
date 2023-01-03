@@ -11,6 +11,11 @@ class SaleForm(ModelForm):
         super().__init__(*args, **kwargs)
         # self.fields['cli'].queryset = Cliente.objects.none()
 
+    
+    def post(self, request, *args, **kwargs):
+        usuario = request.user
+        return usuario
+
     class Meta:
         model = Sale
         fields = '__all__'

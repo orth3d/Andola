@@ -98,7 +98,7 @@ function generate_report() {
         ],
         columnDefs: [
             {
-                targets: [-2, -3],
+                targets: [-2, -3, -4],
                 class: 'text-center',
                 orderable: false,
                 render: function (data, type, row) {
@@ -120,11 +120,9 @@ $(function () {
         $(this).data('daterangepicker').setStartDate(date_now);
         $(this).data('daterangepicker').setEndDate(date_now);
         date_range = picker;
-        // generate_report();
     });
-    $('select[name="terapeuta"]').change(function(){
-        parameters.terapeuta = $("option:selected").val();
-        generate_report();
-    });
+    generate_report();
+}).on('select[name="terapeuta"]').change(function(){
+    parameters.terapeuta = $("option:selected").val();
     generate_report();
 });

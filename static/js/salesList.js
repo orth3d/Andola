@@ -1,13 +1,11 @@
 var tblSale;
-
 $(function () {
-
     tblSale = $('#data').DataTable({
         responsive: true,
         autoWidth: false,
         destroy: true,
         deferRender: true,
-        pageLength: 25,
+        pageLength: 50,
         ajax: {
             url: window.location.pathname,
             type: 'POST',
@@ -19,6 +17,7 @@ $(function () {
         columns: [
             {"data": "id"},
             {"data": "cli"},
+            {"data": "added"},
             {"data": "date_joined"},
             {"data": "total"},
             {"data": "id"},
@@ -109,7 +108,7 @@ $(function () {
             });
 
             $('#comment').html('<br>'+'<h5>Comentarios: </h5>'+'<p>' + comment + '</p>');
-            $('#addedby').html('<br>'+'<p>Agregado por <b>' + data.added + '</b></p>');
+            $('#addedby').html('<br>'+'<p>Atendido por <b>'+ data.added + '</b></p>');
             $('#myModalDet').modal('show');
         })
         .on('click', 'a[rel="delete"]', function (){

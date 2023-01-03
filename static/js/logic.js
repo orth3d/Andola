@@ -161,11 +161,9 @@ $(function(){
           '<span class="badge badge-primary badge-pill">' + vents.items.products[i].cant + '</span></li>';
         }
         
-        console.log(cliente);
-
         productos += '</ul>'
         var content = '<div>' + cliente + '</div>' +
-                        '<div class="text-justify">' + productos + '</div>'||vents.items.cli; //.products.cant) + ' ' + JSON.stringify(vents.items.products.cant) + '</div>';
+                        '<div class="text-justify">' + productos + '</div>' + '<div class="align-items-right"><b>Total: $' + vents.items.total + '</b></div>'||vents.items.cli; //.products.cant) + ' ' + JSON.stringify(vents.items.products.cant) + '</div>';
         
         submitWithAjax(window.location.pathname, '¿Registrar venta?', content, parameters, function(response) {
             // alert_action('Notificación', '¿Imprimir ticket?', function() {

@@ -55,7 +55,7 @@ function submitWithAjax(url, title, content, parameters, callback) {
     $.confirm({
         theme: 'modern',
         title: title,
-        icon: 'fas fa-info-circle',
+        // icon: 'fas fa-info-circle',
         content: content,
         cancelButtonClass: 'btn-primary',
         buttons: {
