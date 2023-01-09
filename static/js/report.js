@@ -14,9 +14,8 @@ function generate_report() {
     if(date_range !== null ){
         parameters['start_date'] = date_range.startDate.format('YYYY-MM-DD');
         parameters['end_date'] = date_range.endDate.format('YYYY-MM-DD');
-        parameters['terapeuta'] = terapeuta;
+        parameters['terapeuta'] = $('select[name="terapeuta"] option:selected').val();//terapeuta;
     }
-    console.log(parameters);
     $('#data').DataTable({
         responsive: true,
         autoWidth: false,

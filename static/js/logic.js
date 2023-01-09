@@ -162,8 +162,8 @@ $(function(){
         }
         
         productos += '</ul>'
-        var content = '<div>' + cliente + '</div>' +
-                        '<div class="text-justify">' + productos + '</div>' + '<div class="align-items-right"><b>Total: $' + vents.items.total + '</b></div>'||vents.items.cli; //.products.cant) + ' ' + JSON.stringify(vents.items.products.cant) + '</div>';
+        var content = '<div><b>' + cliente + '</b></div><br>' +
+                        '<div class="text-justify">' + productos + '</div><br>' + '<div">Total: <b>$' + vents.items.total + '</b><br> Atendido por: <b>' + $('select[name="added"] option:selected').text() + '</b></div>'||vents.items.cli; //.products.cant) + ' ' + JSON.stringify(vents.items.products.cant) + '</div>';
         
         submitWithAjax(window.location.pathname, '¿Registrar venta?', content, parameters, function(response) {
             // alert_action('Notificación', '¿Imprimir ticket?', function() {

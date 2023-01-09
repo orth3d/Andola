@@ -266,7 +266,7 @@ class SaleListView(ListView):
             if action == 'searchdata':
                 data = []
                 if request.user.is_staff:
-                    for i in Sale.objects.order_by('-id')[:200]:#filter(added__isnull=False):
+                    for i in Sale.objects.order_by('-id')[:100]:#filter(added__isnull=False):
                         data.append(i.toJSON())
                 else:
                     for i in Sale.objects.filter(date_joined=datetime.now()):
